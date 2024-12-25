@@ -15,32 +15,19 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 public class AdminView extends AbstractAdminView{
-	private User user;
-	private ImageView[] buttonImages = new ImageView[5];
-	private BorderPane frame;
-	private VBox top;
+	private final User user;
+	private final ImageView[] buttonImages = new ImageView[5];
+    private VBox top;
 	private Scene scene;
-	private Button profile_button;
-	private Button other_users_buttons;
-	private Button bookstore_button;
-	private Button statistics_button;
-	private Button log_out_button;
-	private FileInputStream image;
-	private Image img;
-	private Alert alert;
-	private VBox center;
-	private Label welcome_user;
-	private HBox options_1;
-	private HBox options_2;
-	private VBox options_3;
+    private VBox center;
 
-	public AdminView(User user){
+    public AdminView(User user){
 		this.user = user;
 	}
 	public Scene showView(Stage stage) throws Exception {
 
-		frame = new BorderPane(); // Main Frame that will hold every component and pane
-		//frame.setStyle("-fx-background-color: #FFF9E9;");
+        BorderPane frame = new BorderPane(); // Main Frame that will hold every component and pane
+        //frame.setStyle("-fx-background-color: #FFF9E9;");
 		Image backgroundImage = new Image("file:/Users/regiloshi/IdeaProjects/BookStore_Javafx/BookStore/Images/3d-render-wooden-table-looking-out-blurred-background-with-bookcase.jpg");
 
 		BackgroundSize backgroundSize = new BackgroundSize(
@@ -65,11 +52,11 @@ public class AdminView extends AbstractAdminView{
 		getButtonImages();//call function that will get the images required for the side options
 
 
-		options_1 = new HBox();
-		options_2 = new HBox();
-		options_3 = new VBox();
+        HBox options_1 = new HBox();
+        HBox options_2 = new HBox();
+        VBox options_3 = new VBox();
 
-		profile_button = new Button("",buttonImages[0]);
+        Button profile_button = new Button("", buttonImages[0]);
 		profile_button.setPrefHeight(120);
 		profile_button.setPrefWidth(150);
 		profile_button.setBackground(null);
@@ -83,27 +70,27 @@ public class AdminView extends AbstractAdminView{
 		});
 
 
-		other_users_buttons = new Button("",buttonImages[1]);
+        Button other_users_buttons = new Button("", buttonImages[1]);
 		other_users_buttons.setPrefHeight(120);
 		other_users_buttons.setPrefWidth(150);
 		other_users_buttons.setBackground(null);
 
-		bookstore_button = new Button("",buttonImages[2]);
+        Button bookstore_button = new Button("", buttonImages[2]);
 		bookstore_button.setPrefHeight(120);
 		bookstore_button.setPrefWidth(150);
 		bookstore_button.setBackground(null);
 
-		bookstore_button.setOnAction( e -> {
+		bookstore_button.setOnAction(e -> {
 			BookView bookview = new BookView(user.getRole() , user);
 			stage.setScene(bookview.showView(stage));
 		});
 
-		statistics_button = new Button("",buttonImages[3]);
+        Button statistics_button = new Button("", buttonImages[3]);
 		statistics_button.setPrefHeight(120);
 		statistics_button.setPrefWidth(150);
 		statistics_button.setBackground(null);
 
-		log_out_button = new Button("",buttonImages[4]);
+        Button log_out_button = new Button("", buttonImages[4]);
 		log_out_button.setPrefHeight(120);
 		log_out_button.setPrefWidth(150);
 		log_out_button.setBackground(null);
@@ -112,10 +99,10 @@ public class AdminView extends AbstractAdminView{
 			stage.setScene(loginView.showView(stage));
 		});
 
-		options_1.getChildren().addAll(profile_button, other_users_buttons , bookstore_button);
-		options_2.getChildren().addAll(statistics_button , log_out_button);
+		options_1.getChildren().addAll(profile_button, other_users_buttons, bookstore_button);
+		options_2.getChildren().addAll(statistics_button, log_out_button);
 		options_2.setSpacing(20);
-		options_3.getChildren().addAll(options_1 , options_2);
+		options_3.getChildren().addAll(options_1, options_2);
 		options_3.setAlignment(Pos.CENTER);
 
 		//event handlers for the buttons
@@ -130,15 +117,14 @@ public class AdminView extends AbstractAdminView{
 				}
 		);
 
-		welcome_user = new Label("Welcome " + user.getFirstName() + " " + user.getLastName()); 												//!!!!!!!!!!!! Replace with the class.getUsername(); to make it Dynamic depending on which users logs in
-		welcome_user.setStyle(
+        Label welcome_user = new Label("Welcome " + user.getFirstName() + " " + user.getLastName());                                                //!!!!!!!!!!!! Replace with the class.getUsername(); to make it Dynamic depending on which users logs in
+        welcome_user.setStyle(
 				"-fx-font-size: 80px;" + // Set font size to 24 pixels							//!!!!!!! Not Finished yet the style will be changed to match background and look better
 						"-fx-font-family: 'Arial';" + // Set font family to Arial
 						"-fx-text-fill: white;" // Set text color to white
 		);
-		;
-		frame.setAlignment(welcome_user, Pos.CENTER);
-		frame.setAlignment(options_3, Pos.CENTER);
+		BorderPane.setAlignment(welcome_user, Pos.CENTER);
+		BorderPane.setAlignment(options_3, Pos.CENTER);
 		options_1.setAlignment(Pos.CENTER);
 		options_2.setAlignment(Pos.CENTER);
 		double buttonSize = 150.0;
@@ -153,7 +139,7 @@ public class AdminView extends AbstractAdminView{
 		// create scene
 
 		stage.setTitle("Admin Window");
-		return new Scene(frame , 1000 , 720 );
+		return new Scene(frame, 1000 , 720 );
 	}
 
 	protected void getButtonImages() {
@@ -162,7 +148,10 @@ public class AdminView extends AbstractAdminView{
 		 */
 		String os = System.getProperty("os.name").toLowerCase();
 
-		if (os.contains("win")) {
+        FileInputStream image;
+        Alert alert;
+        Image img;
+        if (os.contains("win")) {
 			for(int i=0; i<5; i++) {
 				try {
 					switch (i) {

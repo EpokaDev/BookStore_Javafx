@@ -85,7 +85,7 @@ public class LoginController implements DatabaseConnector {
                                 primaryStage.setScene(adminView.showView(primaryStage));
                             } catch (Exception exception) {
                                 System.out.println("Error in adminView");
-                                exception.printStackTrace();
+                                System.out.println(exception.getMessage());
                             }
                         } else {
                             Alerts.infoBox("Login Successful!", null, "Success");
@@ -94,7 +94,7 @@ public class LoginController implements DatabaseConnector {
                                 primaryStage.setScene(bookView.showView(primaryStage));
                             } catch (Exception exception) {
                                 System.out.println("Error in bookView");
-                                exception.printStackTrace();
+                                System.out.println(exception.getMessage());
                             }
                         }
                     } else {
@@ -104,7 +104,7 @@ public class LoginController implements DatabaseConnector {
                 }
             } catch (SQLException ex) {
                 System.out.println("Did not sign in to DB");
-                ex.printStackTrace();
+                System.out.println(ex.getMessage());
             }
         });
     }

@@ -65,7 +65,7 @@ public class BookController implements DatabaseConnector {
                 preparedStatement.executeUpdate();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 
@@ -90,13 +90,13 @@ public class BookController implements DatabaseConnector {
             }
 
             for (Book book : selectedBooks) {
-                String createeSQL = "INSERT INTO SoldBookType (ISBN, amount, soldQuantity, orderId) VALUES (?, ?, ?, ?)";
-                PreparedStatement preparedStatementt = connection.prepareStatement(createeSQL);
-                preparedStatementt.setString(1, book.getISBN());
-                preparedStatementt.setDouble(2, (book.getSellingPrice() - book.getOriginalPrice()));
-                preparedStatementt.setInt(3, book.getChosenQuantity());
-                preparedStatementt.setInt(4, orderId);
-                preparedStatementt.executeUpdate();
+                String createNewSQL = "INSERT INTO SoldBookType (ISBN, amount, soldQuantity, orderId) VALUES (?, ?, ?, ?)";
+                PreparedStatement preparedNewStatement = connection.prepareStatement(createNewSQL);
+                preparedNewStatement.setString(1, book.getISBN());
+                preparedNewStatement.setDouble(2, (book.getSellingPrice() - book.getOriginalPrice()));
+                preparedNewStatement.setInt(3, book.getChosenQuantity());
+                preparedNewStatement.setInt(4, orderId);
+                preparedNewStatement.executeUpdate();
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

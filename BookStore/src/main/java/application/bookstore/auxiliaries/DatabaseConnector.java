@@ -8,9 +8,9 @@ public interface DatabaseConnector {
      String PASSWORD = "workbench12$"; */
 
 
-     String JDBC_URL = "jdbc:mysql://127.0.0.1:3306/new_schema";
+     String JDBC_URL = "jdbc:mysql://localhost:3306/bookstore";
      String USER = "root";
-      String PASSWORD = "11112003";
+     String PASSWORD = "11112003";
 
 
 }

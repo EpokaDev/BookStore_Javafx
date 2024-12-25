@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 
 
 public class ProfileView {
-    private User user;
+    private final User user;
     private Label first_name_label;
     private TextField surname;
     private TextField first_name;
@@ -23,20 +23,15 @@ public class ProfileView {
     private Label username_label;
     private Label gender_label;
     private TextField gender;
-    private Label role_label;
-    private TextField role;
     private Label access_label;
     private TextField access;
     private GridPane pane;
-    private Button edit_button;
-    private Stage stage;
 
     public ProfileView(User user) {
         this.user = user;
     }
 
     public Scene showView(Stage stage) {
-        this.stage = stage;
         pane = new GridPane();
         pane.setAlignment(Pos.TOP_CENTER);
         pane.setHgap(30);
@@ -72,13 +67,13 @@ public class ProfileView {
         gender.setEditable(false);
         gender.setText(user.getGender());
 
-        role_label = new Label("Role:");
+        Label role_label = new Label("Role:");
 
-        role = new TextField();
+        TextField role = new TextField();
         role.setEditable(false);
         role.setText(user.getRoleString());
 
-        edit_button = new Button("Edit");
+        Button edit_button = new Button("Edit");
 
         pane.add(first_name_label, 0, 0);
         pane.add(first_name, 1, 0);

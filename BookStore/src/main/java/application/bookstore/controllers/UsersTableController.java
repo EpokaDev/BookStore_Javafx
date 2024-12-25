@@ -197,8 +197,8 @@ public class UsersTableController implements DatabaseConnector {
             preparedStatement.setString(1,user.getFirstName());
             preparedStatement.setString(2,user.getLastName());
             preparedStatement.setString(3,user.getEmail());
-            preparedStatement.setString(4,user.getPassword());
-            preparedStatement.setString(5,user.getUsername());;
+            preparedStatement.setString(5,user.getPassword());
+            preparedStatement.setString(4,user.getUsername());;
             preparedStatement.setString(6,user.getGender());
             preparedStatement.setString(7,user.getRoleString());
 

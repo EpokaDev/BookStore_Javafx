@@ -20,26 +20,9 @@ import java.io.File;
 
 public class EditBookView {
     private GridPane pane;
-    private BorderPane mainpane;
-    private HBox hbox;
-    private Button addBook;
-    private Button cancelButton;
 
-    private Label isbnLabel;
-    private Label titleLabel;
-    private Label authorLabel;
-    private Label categoryLabel;
-    private Label descriptionLabel;
-    private Label originalPriceLabel;
-    private Label sellingPriceLabel;
-    private Label quantityLabel;
-
-    private Label supplierNameLabel;
-    private Label supplierEmailLabel;
     private Label supplierPhoneLabel;
-    private Label supplierAddressLabel;
 
-    private TextField isbnTextField;
     private TextField titleTextField;
     private TextField authorTextField;
     private TextField categoryTextField;
@@ -50,26 +33,24 @@ public class EditBookView {
 
     private TextField supplierNameTextField;
     private TextField supplierEmailTextField;
-    private TextField supplierPhoneTextField;
     private TextField supplierAddressTextField;
     private ImageView imageView;
     private File selectedImageFile;
-    private Label image_label;
-    private Book book;
+    private final Book book;
 
     public EditBookView(Book book){
         this.book = book;
     }
 
     public Scene showView(Stage stage) throws Exception {
-        mainpane = new BorderPane();
+        BorderPane mainPane = new BorderPane();
         pane = createBookEntryForm();
-        hbox = new HBox();
-        addBook = new Button("Edit Book");
+        HBox hbox = new HBox();
+        Button addBook = new Button("Edit Book");
         addBook.setMinHeight(50);
         addBook.setMinWidth(150);
         addBook.setOnAction(e -> {editBook(); stage.close();});
-        cancelButton = new Button("Cancel");
+        Button cancelButton = new Button("Cancel");
         cancelButton.setMinHeight(50);
         cancelButton.setMinWidth(150);
         cancelButton.setOnAction(e -> stage.close());
@@ -78,11 +59,11 @@ public class EditBookView {
         hbox.setSpacing(30);
         hbox.getChildren().addAll(addBook, cancelButton);
 
-        mainpane.setBottom(hbox);
-        mainpane.setCenter(pane);
+        mainPane.setBottom(hbox);
+        mainPane.setCenter(pane);
 
-        mainpane.setStyle("-fx-background-color: #f0f0f0;");
-        mainpane.setPadding(new Insets(50));
+        mainPane.setStyle("-fx-background-color: #f0f0f0;");
+        mainPane.setPadding(new Insets(50));
 
         pane.setAlignment(Pos.CENTER);
         pane.setPadding(new Insets(20));
@@ -91,7 +72,7 @@ public class EditBookView {
         cancelButton.setStyle("-fx-font-size: 18;");
 
         stage.setTitle("Edit Book");
-        return new Scene(mainpane, 800, 800);
+        return new Scene(mainPane, 800, 800);
     }
 
     private GridPane createBookEntryForm() {
@@ -100,20 +81,20 @@ public class EditBookView {
         pane.setVgap(15);
         pane.setHgap(15);
 
-        isbnLabel = new Label("ISBN:");
-        titleLabel = new Label("Title:");
-        authorLabel = new Label("Author:");
-        categoryLabel = new Label("Category:");
-        descriptionLabel = new Label("Description:");
-        originalPriceLabel = new Label("Original Price:");
-        sellingPriceLabel = new Label("Selling Price:");
-        quantityLabel = new Label("Quantity:");
+        Label isbnLabel = new Label("ISBN:");
+        Label titleLabel = new Label("Title:");
+        Label authorLabel = new Label("Author:");
+        Label categoryLabel = new Label("Category:");
+        Label descriptionLabel = new Label("Description:");
+        Label originalPriceLabel = new Label("Original Price:");
+        Label sellingPriceLabel = new Label("Selling Price:");
+        Label quantityLabel = new Label("Quantity:");
 
-        supplierNameLabel = new Label("Supplier Name:");
-        supplierEmailLabel = new Label("Supplier Email:");
+        Label supplierNameLabel = new Label("Supplier Name:");
+        Label supplierEmailLabel = new Label("Supplier Email:");
         supplierPhoneLabel = new Label("Supplier Phone:");
-        supplierAddressLabel = new Label("Supplier Address:");
-        image_label = new Label("Book Image:");
+        Label supplierAddressLabel = new Label("Supplier Address:");
+        Label image_label = new Label("Book Image:");
 
         isbnLabel.setStyle("-fx-font-size: 16;");
         titleLabel.setStyle("-fx-font-size: 16;");
@@ -129,7 +110,7 @@ public class EditBookView {
         supplierAddressLabel.setStyle("-fx-font-size: 16;");
         image_label.setStyle("-fx-font-size: 16;");
 
-        isbnTextField = new TextField(book.getISBN());
+        TextField isbnTextField = new TextField(book.getISBN());
         isbnTextField.setEditable(false);
         titleTextField = new TextField();
         authorTextField = new TextField();
@@ -141,7 +122,7 @@ public class EditBookView {
 
         supplierNameTextField = new TextField();
         supplierEmailTextField = new TextField();
-        supplierPhoneTextField = new TextField();
+        TextField supplierPhoneTextField = new TextField();
         supplierAddressTextField = new TextField();
 
         imageView = new ImageView();
@@ -166,7 +147,7 @@ public class EditBookView {
         pane.addRow(9, supplierEmailLabel, supplierEmailTextField);
         pane.addRow(10, supplierPhoneLabel, supplierPhoneTextField);
         pane.addRow(11, supplierAddressLabel, supplierAddressTextField);
-        pane.addRow(12,image_label , imageView, chooseImageButton);
+        pane.addRow(12, image_label, imageView, chooseImageButton);
 
         return pane;
     }
@@ -184,7 +165,7 @@ public class EditBookView {
             imageView.setImage(image);
         }
     }
-    public Book editBook() {
+    public void editBook() {
         try {
             book.setTitle(titleTextField.getText());
             book.setAuthor(authorTextField.getText());
@@ -199,10 +180,8 @@ public class EditBookView {
             book.setSupplier(supplier);
             book.saveImageLocally(selectedImageFile);
             book.updateInDatabase();
-            return book;
         } catch (NumberFormatException e) {
-            e.printStackTrace();
-            return null;
+            System.out.println(e.getMessage());
         }
     }
 }
