@@ -17,17 +17,24 @@ jobs:
       security-events: write
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout Code
+        uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
 
-      - name: 'Qodana Scan'
+      - name: Run Qodana Scan
         uses: JetBrains/qodana-action@v2024.3
         with:
-          linter: jetbrains/qodana-jvm-community:2024.3
+          args: jetbrains/qodana-jvm-community:2024.3
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+
+      - name: Upload SARIF File
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ${{ runner.temp }}/qodana/results/qodana.sarif
+
 
       - uses: github/codeql-action/upload-sarif@v3
         with:
