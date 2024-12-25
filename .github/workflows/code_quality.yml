@@ -4,7 +4,7 @@ on:
   pull_request:
   push:
     branches:
-      - master
+      - main
       - 'releases/*'
 
 jobs:
@@ -14,24 +14,13 @@ jobs:
       contents: write
       pull-requests: write
       checks: write
-      security-events: write
-
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 0
-
-      - name: Run Qodana Scan
+          ref: ${{ github.event.pull_request.head.sha }}  # to check out the actual pull request commit, not the merge commit
+          fetch-depth: 0  # a full history is required for pull request analysis
+      - name: 'Qodana Scan'
         uses: JetBrains/qodana-action@v2024.3
-        with:
-          args: jetbrains/qodana-jvm-community:2024.3
         env:
-          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
-
-      - name: Upload SARIF File
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: ${{ runner.temp }}/qodana/results/qodana.sarif
+          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }} # read the steps about it below
 
