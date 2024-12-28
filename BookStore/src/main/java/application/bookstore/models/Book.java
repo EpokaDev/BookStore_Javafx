@@ -229,6 +229,9 @@ public class Book  implements DatabaseConnector {
   }
 
   public final void setChosenQuantity(int chosenQuantity) {
+    if(chosenQuantity < 0){
+      throw new IllegalArgumentException("Chosen quantity cannot be negative");
+    }
     this.chosenQuantityProperty().set(chosenQuantity);
   }
 

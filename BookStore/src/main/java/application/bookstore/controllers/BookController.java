@@ -70,6 +70,9 @@ public class BookController implements DatabaseConnector {
     }
 
     public static void generateBillToDatabase(ObservableList<Book> selectedBooks, double amount, User user) {
+        if(amount < 0){
+            throw new IllegalArgumentException("Amount cannot be negative");
+        }
         try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
             LocalDateTime timestamp = LocalDateTime.now();
