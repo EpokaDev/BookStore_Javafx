@@ -20,6 +20,7 @@ public class BookController implements DatabaseConnector {
         if (!billsFolder.exists()) {
             billsFolder.mkdir();
         }
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
         String timestamp = LocalDateTime.now().format(formatter);
         String fileName = "bills/bill_" + timestamp + ".txt";
@@ -105,5 +106,9 @@ public class BookController implements DatabaseConnector {
             throw new RuntimeException(e);
         }
     }
+
+
+
+
 }
 
