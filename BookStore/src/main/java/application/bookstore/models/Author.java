@@ -6,7 +6,7 @@ public class Author {
 
     int authorId;
     private String fullName;
-    private ArrayList<Book> authorBooks;
+    private final ArrayList<Book> authorBooks;
 
 
     public Author(String fullName) {

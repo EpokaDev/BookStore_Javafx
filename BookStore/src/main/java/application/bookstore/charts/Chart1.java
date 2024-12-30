@@ -13,19 +13,17 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.Locale;
 
 public class Chart1 implements DatabaseConnector {
 
 
-    private User currentUser;
+    private final User currentUser;
     public Chart1(User u)
     {
         this.currentUser=u;
@@ -52,20 +50,7 @@ public class Chart1 implements DatabaseConnector {
         emptyBtn.setPrefWidth(100);
         emptyBtn.setOpacity(0);
 
-        Button nextChartButton = new Button("Next");
-        nextChartButton.setOnAction(e -> {
-            Chart2 chart2=new Chart2(currentUser);
-            primaryStage.setScene(chart2.showView(primaryStage));
-        });
-
-        nextChartButton.setPrefWidth(100);
-        nextChartButton.setPadding(new Insets(20,20,20,20));
-
-        nextChartButton.setStyle(
-                "-fx-background-color: orange; " +
-                        "-fx-text-fill: white; " +
-                        "-fx-font-size: 15px; "
-        );
+        Button nextChartButton = getNextChartButton(primaryStage);
 
         HBox buttonsBox = new HBox(10, emptyBtn, nextChartButton);
         buttonsBox.setAlignment(Pos.CENTER);
@@ -106,6 +91,12 @@ public class Chart1 implements DatabaseConnector {
         return new Scene(root, 1000, 700);
     }
 
+    private Button getNextChartButton(Stage primaryStage) {
+        Button nextChartButton = new Button("Next");
+        Chart3.goBackButton(primaryStage, nextChartButton, currentUser);
+        return nextChartButton;
+    }
+
     private ObservableList<PieChart.Data> getBookProfitData() {
         ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
 
@@ -135,7 +126,7 @@ public class Chart1 implements DatabaseConnector {
             connection.close();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            e.fillInStackTrace();
         }
 
         return pieChartData;

@@ -6,7 +6,7 @@ import java.sql.*;
 
 public class Supplier implements DatabaseConnector {
     private int supplierId;
-    private boolean exists = false;
+    private final boolean exists = false;
     private String name, email, phoneNumber, address;
 
 

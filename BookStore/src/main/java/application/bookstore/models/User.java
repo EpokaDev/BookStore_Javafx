@@ -1,12 +1,7 @@
 package application.bookstore.models;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.scene.control.Button;
-import javafx.scene.layout.HBox;
-import javafx.scene.text.Font;
+
 
 public class User {
 

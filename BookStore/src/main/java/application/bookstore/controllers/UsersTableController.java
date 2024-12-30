@@ -12,7 +12,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.stage.Stage;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -21,18 +20,18 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 public class UsersTableController implements DatabaseConnector {
-    private ObservableList<User> users;
+    private final ObservableList<User> users;
 
-    private TableView<User> tableView;
-    private TableColumn<User, String> firstNameColumn;
-    private TableColumn<User, String> lastNameColumn;
-    private TableColumn<User, String> emailColumn;
-    private TableColumn<User,String> userNameColumn;
-    private TableColumn<User, String> passwordColumn;
-    private TableColumn<User, String> genderColumn;
-    private TableColumn<User, String> roleColumn;
-    private Button addButton;
-    private Button removeButton;
+    private final TableView<User> tableView;
+    private final TableColumn<User, String> firstNameColumn;
+    private final TableColumn<User, String> lastNameColumn;
+    private final TableColumn<User, String> emailColumn;
+    private final TableColumn<User,String> userNameColumn;
+    private final TableColumn<User, String> passwordColumn;
+    private final TableColumn<User, String> genderColumn;
+    private final TableColumn<User, String> roleColumn;
+    private final Button addButton;
+    private final Button removeButton;
 
     public UsersTableController(UsersTableView view,ObservableList<User> currentUsers) {
 
@@ -135,7 +134,7 @@ public class UsersTableController implements DatabaseConnector {
                 }catch (Exception e)
                 {
                     System.out.println("Something wrong with the dialog");
-                    e.printStackTrace();
+                    e.fillInStackTrace();
                 }
 
             }
@@ -157,7 +156,7 @@ public class UsersTableController implements DatabaseConnector {
                     int rowsAffected = preparedStatement.executeUpdate();
                 } catch (SQLException ex) {
                     System.out.println("Did not sign in to DB");
-                    ex.printStackTrace();
+                    ex.fillInStackTrace();
                 }
 
                 //removing from tableView and users
@@ -176,7 +175,7 @@ public class UsersTableController implements DatabaseConnector {
             preparedStatement.executeUpdate();
         } catch (SQLException ex) {
             System.out.println("Did not sign in to DB");
-            ex.printStackTrace();
+            ex.fillInStackTrace();
         }
     }
     public void add(User user) {
@@ -205,7 +204,7 @@ public class UsersTableController implements DatabaseConnector {
             preparedStatement.executeUpdate();
         } catch (SQLException ex) {
             System.out.println("Problem when adding user");
-            ex.printStackTrace();
+            ex.fillInStackTrace();
         }
 
     }

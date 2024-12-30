@@ -4,10 +4,8 @@ import application.bookstore.Exceptions.EmailAlreadyExistsException;
 import application.bookstore.Exceptions.PasswordAlreadyExistsException;
 import application.bookstore.Exceptions.UsernameAlreadyExistsException;
 import application.bookstore.auxiliaries.DatabaseConnector;
-import application.bookstore.views.AddNewUserDialog;
 
 import java.sql.*;
-import java.util.ArrayList;
 
 public class AddNewUserController implements DatabaseConnector {
 
@@ -45,7 +43,7 @@ public class AddNewUserController implements DatabaseConnector {
 
         } catch (SQLException e) {
             System.out.println("Problem with DB");
-            e.printStackTrace();  // Handle the exception appropriately
+            e.fillInStackTrace();
         }
 
         return valueExists;

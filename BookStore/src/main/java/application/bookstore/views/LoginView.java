@@ -35,8 +35,20 @@ public class LoginView implements DatabaseConnector {
         StackPane root = new StackPane();
 
         try {
-            FileInputStream logoFile = new FileInputStream("/Users/regiloshi/Documents/Documents - Regi’s MacBook Air (2)/Projects/BookStore_Javafx/BookStore/Images/bookStoreLogo2.png");
-            FileInputStream backgroundFile = new FileInputStream("/Users/regiloshi/Documents/Documents - Regi’s MacBook Air (2)/Projects/BookStore_Javafx/BookStore/Images/3d-render-wooden-table-looking-out-blurred-background-with-bookcase.jpg");
+            FileInputStream logoFile;
+            FileInputStream backgroundFile;
+
+            String osName = System.getProperty("os.name").toLowerCase();
+
+            if (osName.contains("win"))
+            {
+                logoFile = new FileInputStream("C:\\Users\\alvin\\OneDrive\\Desktop\\SW_testing\\Bookstore_javfx_testing\\BookStore_Javafx\\BookStore\\Images\\bookStoreLogo2.png");
+                backgroundFile= new FileInputStream("C:\\Users\\alvin\\OneDrive\\Desktop\\SW_testing\\Bookstore_javfx_testing\\BookStore_Javafx\\BookStore\\Images\\3d-render-wooden-table-looking-out-blurred-background-with-bookcase.jpg");
+            }else
+            {
+                 logoFile = new FileInputStream("/Users/regiloshi/Documents/Documents - Regi’s MacBook Air (2)/Projects/BookStore_Javafx/BookStore/Images/bookStoreLogo2.png");
+                 backgroundFile = new FileInputStream("/Users/regiloshi/Documents/Documents - Regi’s MacBook Air (2)/Projects/BookStore_Javafx/BookStore/Images/3d-render-wooden-table-looking-out-blurred-background-with-bookcase.jpg");
+            }
 
             Image logoImage = new Image(logoFile);
             Image backgroundImage = new Image(backgroundFile);

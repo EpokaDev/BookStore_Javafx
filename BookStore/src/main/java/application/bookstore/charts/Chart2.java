@@ -1,7 +1,6 @@
 package application.bookstore.charts;
 
 import application.bookstore.auxiliaries.DatabaseConnector;
-import application.bookstore.models.Book;
 import application.bookstore.models.User;
 import application.bookstore.views.AdminView;
 import application.bookstore.views.BookView;
@@ -20,10 +19,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.Collection;
 
 public class Chart2 implements DatabaseConnector {
-    private User currentUser;
+    private final User currentUser;
 
     public Chart2(User u)
     {
@@ -62,24 +60,7 @@ public class Chart2 implements DatabaseConnector {
                         "-fx-font-size: 15px; "
         );
 
-        Button nextChartButton = new Button("Next");
-        nextChartButton.setOnAction(e -> {
-            System.out.println("Next Chart clicked");
-        });
-
-        nextChartButton.setPrefWidth(100);
-        nextChartButton.setPadding(new Insets(20,20,20,20));
-
-        nextChartButton.setStyle(
-                "-fx-background-color: orange; " +
-                        "-fx-text-fill: white; " +
-                        "-fx-font-size: 15px; "
-        );
-
-        nextChartButton.setOnAction(e->{
-            Chart3 chart3=new Chart3(currentUser);
-            primaryStage.setScene(chart3.showView(primaryStage));
-        });
+        Button nextChartButton = getNextChartButton(primaryStage);
 
 
         HBox buttonsBox = new HBox(10, goBackButton, nextChartButton);
@@ -120,6 +101,28 @@ public class Chart2 implements DatabaseConnector {
         return new Scene(root, 1000, 700);
     }
 
+    private Button getNextChartButton(Stage primaryStage) {
+        Button nextChartButton = new Button("Next");
+        nextChartButton.setOnAction(e -> {
+            System.out.println("Next Chart clicked");
+        });
+
+        nextChartButton.setPrefWidth(100);
+        nextChartButton.setPadding(new Insets(20,20,20,20));
+
+        nextChartButton.setStyle(
+                "-fx-background-color: orange; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-font-size: 15px; "
+        );
+
+        nextChartButton.setOnAction(e->{
+            Chart3 chart3=new Chart3(currentUser);
+            primaryStage.setScene(chart3.showView(primaryStage));
+        });
+        return nextChartButton;
+    }
+
     private ObservableList<PieChart.Data> getUnitsSoldData() {
         ObservableList<PieChart.Data> unitsSoldChartData = FXCollections.observableArrayList();
 
@@ -149,7 +152,7 @@ public class Chart2 implements DatabaseConnector {
             connection.close();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            e.fillInStackTrace();
         }
 
         return unitsSoldChartData;

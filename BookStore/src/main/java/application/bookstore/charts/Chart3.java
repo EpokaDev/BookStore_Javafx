@@ -9,7 +9,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
@@ -20,10 +19,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.Collection;
 
 public class Chart3 implements DatabaseConnector{
-    private User currentUser;
+    private final User currentUser;
 
     public Chart3(User u)
     {
@@ -51,19 +49,7 @@ public class Chart3 implements DatabaseConnector{
 
         // Back, Next, Leave Buttons
         Button goBackButton = new Button("Back");
-        goBackButton.setOnAction(e -> {
-            Chart2 chart2=new Chart2(currentUser);
-            primaryStage.setScene(chart2.showView(primaryStage));
-        });
-
-        goBackButton.setPrefWidth(100);
-        goBackButton.setPadding(new Insets(20,20,20,20));
-
-        goBackButton.setStyle(
-                "-fx-background-color: orange; " +
-                        "-fx-text-fill: white; " +
-                        "-fx-font-size: 15px; "
-        );
+        goBackButton(primaryStage, goBackButton, currentUser);
 
         Button nextChartButton = new Button();
         nextChartButton.setPrefWidth(100);
@@ -110,6 +96,22 @@ public class Chart3 implements DatabaseConnector{
         return new Scene(root, 1000, 700);
     }
 
+    static void goBackButton(Stage primaryStage, Button goBackButton, User currentUser) {
+        goBackButton.setOnAction(e -> {
+            Chart2 chart2=new Chart2(currentUser);
+            primaryStage.setScene(chart2.showView(primaryStage));
+        });
+
+        goBackButton.setPrefWidth(100);
+        goBackButton.setPadding(new Insets(20,20,20,20));
+
+        goBackButton.setStyle(
+                "-fx-background-color: orange; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-font-size: 15px; "
+        );
+    }
+
     private ObservableList<PieChart.Data> getSupplierBooksData() {
         ObservableList<PieChart.Data> supplierBooksData = FXCollections.observableArrayList();
 
@@ -140,7 +142,7 @@ public class Chart3 implements DatabaseConnector{
             connection.close();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            e.fillInStackTrace();
         }
 
         return supplierBooksData;
