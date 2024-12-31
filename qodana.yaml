@@ -27,10 +27,11 @@ include:
   - name: UnnecessarySemicolon
 #Disable inspections
 exclude:
-  - name: all
+  - name: "*"
     paths:
-      - mvnw
-      - mvnw.cmd #maven files with typos not our code
+      - "**/mvnw"
+      - "**/mvnw.cmd"
+      - "**/.mvn/**" #maven files with typos not our code
 #Disable inspections
 #exclude:
 #  - name: <SomeDisabledInspectionId>
