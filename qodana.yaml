@@ -25,7 +25,12 @@ include:
   - name: ExtractMethodRecommender
   - name: FieldCanBeLocal
   - name: UnnecessarySemicolon
-
+#Disable inspections
+exclude:
+  - name: all
+    paths:
+      - mvnw
+      - mvnw.cmd #maven files with typos not our code
 #Disable inspections
 #exclude:
 #  - name: <SomeDisabledInspectionId>
