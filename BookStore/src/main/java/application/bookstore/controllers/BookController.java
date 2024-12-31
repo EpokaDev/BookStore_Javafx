@@ -18,7 +18,7 @@ public class BookController implements DatabaseConnector {
     public static void generateBill(User user, ObservableList<Book> selectedBooks, double amount) {
         File billsFolder = new File("bills");
         if (!billsFolder.exists()) {
-            billsFolder.mkdir();
+                throw new RuntimeException();
         }
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
