@@ -28,7 +28,18 @@ public class AdminView extends AbstractAdminView{
 
         BorderPane frame = new BorderPane(); // Main Frame that will hold every component and pane
         //frame.setStyle("-fx-background-color: #FFF9E9;");
-		Image backgroundImage = new Image("file:/Users/regiloshi/IdeaProjects/BookStore_Javafx/BookStore/Images/3d-render-wooden-table-looking-out-blurred-background-with-bookcase.jpg");
+		Image backgroundImage;
+
+		String osName = System.getProperty("os.name").toLowerCase();
+
+		if (osName.contains("win"))
+		{
+			backgroundImage = new Image("C:\\Users\\alvin\\OneDrive\\Desktop\\SW_testing\\Bookstore_javfx_testing\\BookStore_Javafx\\BookStore\\Images\\3d-render-wooden-table-looking-out-blurred-background-with-bookcase.jpg");
+
+		}else
+		{
+			backgroundImage = new Image("file:/Users/regiloshi/IdeaProjects/BookStore_Javafx/BookStore/Images/3d-render-wooden-table-looking-out-blurred-background-with-bookcase.jpg");
+		}
 
 		BackgroundSize backgroundSize = new BackgroundSize(
 				1000,  // Width of the scene
@@ -156,35 +167,35 @@ public class AdminView extends AbstractAdminView{
 				try {
 					switch (i) {
 						case 0:
-							image = new FileInputStream("C:\\Users\\alvin\\OneDrive\\Desktop\\BookStoreJavafx\\BookStore\\Images\\profile_icon.png");
+							image = new FileInputStream("C:\\Users\\alvin\\OneDrive\\Desktop\\BookStoreJavafx\\BookStore\\Images\\user-3.png");
 							img = new Image(image);
 							buttonImages[0] = new ImageView(img);
 							buttonImages[0].setFitHeight(100);
 							buttonImages[0].setFitWidth(100);
 							break;
 						case 1:
-							image = new FileInputStream("C:\\Users\\alvin\\OneDrive\\Desktop\\BookStoreJavafx\\BookStore\\Images\\other_users.png");
+							image = new FileInputStream("C:\\Users\\alvin\\OneDrive\\Desktop\\BookStoreJavafx\\BookStore\\Images\\group-3.png");
 							img = new Image(image);
 							buttonImages[1] = new ImageView(img);
 							buttonImages[1].setFitHeight(100);
 							buttonImages[1].setFitWidth(100);
 							break;
 						case 2:
-							image = new FileInputStream("C:\\Users\\alvin\\OneDrive\\Desktop\\BookStoreJavafx\\BookStore\\Images\\book.png");
+							image = new FileInputStream("C:\\Users\\alvin\\OneDrive\\Desktop\\BookStoreJavafx\\BookStore\\Images\\book-3.png");
 							img = new Image(image);
 							buttonImages[2] = new ImageView(img);
 							buttonImages[2].setFitHeight(120);
 							buttonImages[2].setFitWidth(120);
 							break;
 						case 3:
-							image = new FileInputStream("C:\\Users\\alvin\\OneDrive\\Desktop\\BookStoreJavafx\\BookStore\\Images\\statistics.png");
+							image = new FileInputStream("C:\\Users\\alvin\\OneDrive\\Desktop\\BookStoreJavafx\\BookStore\\Images\\trend.png");
 							img = new Image(image);
 							buttonImages[3] = new ImageView(img);
 							buttonImages[3].setFitHeight(140);
 							buttonImages[3].setFitWidth(140);
 							break;
 						case 4:
-							image = new FileInputStream("C:\\Users\\alvin\\OneDrive\\Desktop\\BookStoreJavafx\\BookStore\\Images\\log_out.png");
+							image = new FileInputStream("C:\\Users\\alvin\\OneDrive\\Desktop\\BookStoreJavafx\\BookStore\\Images\\power.png");
 							img = new Image(image);
 							buttonImages[4] = new ImageView(img);
 							buttonImages[4].setFitHeight(100);
