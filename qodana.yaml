@@ -35,6 +35,7 @@ exclude:
       - bills
       - qodana.yaml
       - BookStore/mvnw
+      - BookStore/mvnw.cmd
 #Disable inspections
 #exclude:
 #  - name: <SomeDisabledInspectionId>
