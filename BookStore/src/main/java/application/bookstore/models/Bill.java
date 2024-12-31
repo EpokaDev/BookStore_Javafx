@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class Bill {
     private int orderId;
-    private ArrayList<SoldBookType> booksSold;
+    private final ArrayList<SoldBookType> booksSold;
     private double amount = 0;
     protected Date dateIssued;
 

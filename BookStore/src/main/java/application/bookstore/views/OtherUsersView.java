@@ -19,11 +19,10 @@ public class OtherUsersView implements DatabaseConnector {
     private User currentAdmin;
     //testing
 
-    private ObservableList<User> users=FXCollections.observableArrayList();
+    private final ObservableList<User> users=FXCollections.observableArrayList();
     private Button addLibrarianButton;
     private Button addManagerButton;
     private Button removeUserButton;
-    private UsersTableView usersTableView;
 
     public OtherUsersView(){}
 
@@ -62,7 +61,7 @@ public class OtherUsersView implements DatabaseConnector {
 
         stage.setTitle("User Information");
 
-        usersTableView=new UsersTableView(users);
+        UsersTableView usersTableView = new UsersTableView(users);
 
         borderPane.setTop(usersTableView);
 

@@ -8,11 +8,8 @@ import application.bookstore.auxiliaries.DatabaseConnector;
 import application.bookstore.controllers.AddNewUserController;
 import application.bookstore.models.User;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -20,33 +17,19 @@ import javafx.scene.text.Font;
 import javafx.event.ActionEvent;
 import javafx.util.Callback;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 public class AddNewUserDialog extends Dialog<User> implements DatabaseConnector {
-    private User user;
-    private Label firstNameL;
+    private final User user;
     private TextField firstNameField;
-    private Label LastNameL;
     private TextField LastNameField;
-    private Label EmailL;
     private TextField EmailField;
-    private Label Username;
     private TextField UsernameField;
-    private Label PasswordL;
     private PasswordField passF;
-    private Label VPasswordL;
     private PasswordField VpassF;
-    private Label genderL;
-    private Label role;
     private RadioButton male;
     private RadioButton female;
-    private RadioButton other;
     private RadioButton admin;
     private RadioButton manager;
-    private RadioButton librarian;
     private ToggleGroup genderToggleGroup;
     private ToggleGroup roleToggleGroup;
 
@@ -169,42 +152,42 @@ public class AddNewUserDialog extends Dialog<User> implements DatabaseConnector 
         gridPane.setHgap(10);
         gridPane.setVgap(10);
 
-        firstNameL = new Label("First Name");
+        Label firstNameL = new Label("First Name");
         firstNameField = new TextField();
         firstNameL.setFont(Font.font(25));
         firstNameField.setFont(Font.font(25));
         gridPane.add(firstNameL, 0, 0);
         gridPane.add(firstNameField, 1, 0);
 
-        LastNameL = new Label("Last Name");
+        Label lastNameL = new Label("Last Name");
         LastNameField = new TextField();
-        LastNameL.setFont(Font.font(25));
+        lastNameL.setFont(Font.font(25));
         LastNameField.setFont(Font.font(25));
-        gridPane.add(LastNameL, 0, 1);
+        gridPane.add(lastNameL, 0, 1);
         gridPane.add(LastNameField, 1, 1);
 
-        EmailL = new Label("Email");
+        Label emailL = new Label("Email");
         EmailField = new TextField();
-        EmailL.setFont(Font.font(25));
+        emailL.setFont(Font.font(25));
         EmailField.setFont(Font.font(25));
-        gridPane.add(EmailL, 0, 2);
+        gridPane.add(emailL, 0, 2);
         gridPane.add(EmailField, 1, 2);
 
-        Username=new Label("Username");
+        Label username = new Label("Username");
         UsernameField=new TextField();
-        Username.setFont(Font.font(25));
+        username.setFont(Font.font(25));
         UsernameField.setFont(Font.font(25));
-        gridPane.add(Username,0,3);
+        gridPane.add(username,0,3);
         gridPane.add(UsernameField,1,3);
 
-        PasswordL = new Label("Password");
+        Label passwordL = new Label("Password");
         passF = new PasswordField();
-        PasswordL.setFont(Font.font(25));
+        passwordL.setFont(Font.font(25));
         passF.setFont(Font.font(25));
-        gridPane.add(PasswordL, 0, 4);
+        gridPane.add(passwordL, 0, 4);
         gridPane.add(passF, 1, 4);
 
-        VPasswordL = new Label("Verify Password");
+        Label VPasswordL = new Label("Verify Password");
         VpassF = new PasswordField();
         VPasswordL.setFont(Font.font(25));
         VpassF.setFont(Font.font(25));
@@ -212,10 +195,10 @@ public class AddNewUserDialog extends Dialog<User> implements DatabaseConnector 
         gridPane.add(VpassF, 1, 5);
 
         genderToggleGroup = new ToggleGroup();
-        genderL = new Label("Gender");
+        Label genderL = new Label("Gender");
         male = new RadioButton("Male");
         female = new RadioButton("Female");
-        other = new RadioButton("Other");
+        RadioButton other = new RadioButton("Other");
         genderL.setFont(Font.font(25));
         male.setFont(Font.font(22));
         female.setFont(Font.font(22));
@@ -225,16 +208,16 @@ public class AddNewUserDialog extends Dialog<User> implements DatabaseConnector 
         other.setToggleGroup(genderToggleGroup);
 
         gridPane.add(genderL, 0, 6);
-        HBox genderButtons = new HBox(male,female,other);
+        HBox genderButtons = new HBox(male,female, other);
         genderButtons.setSpacing(10);
         gridPane.add(genderButtons, 1, 6);
 
-        role = new Label("Role");
+        Label role = new Label("Role");
         role.setFont(Font.font(25));
         roleToggleGroup= new ToggleGroup();
         admin = new RadioButton("Admin");
         manager = new RadioButton("Manager");
-        librarian = new RadioButton("Librarian");
+        RadioButton librarian = new RadioButton("Librarian");
         admin.setFont(Font.font(22));
         manager.setFont(Font.font(22));
         librarian.setFont(Font.font(22));
@@ -243,7 +226,7 @@ public class AddNewUserDialog extends Dialog<User> implements DatabaseConnector 
         librarian.setToggleGroup(roleToggleGroup);
 
         gridPane.add(role,0,7);
-        HBox roleButtons=new HBox(admin,manager,librarian);
+        HBox roleButtons=new HBox(admin,manager, librarian);
         roleButtons.setSpacing(10);
         gridPane.add(roleButtons,1,7);
 

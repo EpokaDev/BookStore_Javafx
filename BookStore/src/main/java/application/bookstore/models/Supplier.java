@@ -89,7 +89,7 @@ public class Supplier implements DatabaseConnector {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.fillInStackTrace();
         }
         return 0;
     }
@@ -107,7 +107,7 @@ public class Supplier implements DatabaseConnector {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.fillInStackTrace();
         }
         return this.supplierId;
     }

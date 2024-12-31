@@ -24,9 +24,9 @@ import java.sql.SQLException;
 
 public class Book  implements DatabaseConnector {
   private int supplierid;
-  private boolean exists = false;
+  private final boolean exists = false;
   private String ISBN, title, author, category, description;
-  private SimpleObjectProperty<ImageView> bookImageProperty = new SimpleObjectProperty<>();
+  private final SimpleObjectProperty<ImageView> bookImageProperty = new SimpleObjectProperty<>();
   private Date purchaseDate;
   private double purchasedPrice, originalPrice, sellingPrice;
   private int quantity;
@@ -155,7 +155,7 @@ public class Book  implements DatabaseConnector {
         updateStatement.executeUpdate();
       }
     } catch (SQLException e) {
-      e.printStackTrace();
+      e.fillInStackTrace();
     }
   }
 
@@ -266,7 +266,7 @@ public class Book  implements DatabaseConnector {
       Files.copy(sourceImageFile.toPath(), new File(destinationPath).toPath(), StandardCopyOption.REPLACE_EXISTING);
       this.imageUrl = "file:" + File.separator + File.separator + destinationPath;
     } catch (IOException e) {
-      e.printStackTrace();
+      e.fillInStackTrace();
     }
   }
   public String getImageUrl() {
@@ -302,7 +302,7 @@ public class Book  implements DatabaseConnector {
         preparedStatement.executeUpdate();
       }
     } catch (SQLException e) {
-      e.printStackTrace();
+      e.fillInStackTrace();
     }
   }
   public void updateInDatabase() {
@@ -330,7 +330,7 @@ public class Book  implements DatabaseConnector {
         }
       }
     } catch (SQLException e) {
-      e.printStackTrace();
+      e.fillInStackTrace();
     }
   }
 }

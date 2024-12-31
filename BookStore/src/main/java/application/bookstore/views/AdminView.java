@@ -24,7 +24,7 @@ public class AdminView extends AbstractAdminView{
     public AdminView(User user){
 		this.user = user;
 	}
-	public Scene showView(Stage stage) throws Exception {
+	public Scene showView(Stage stage) {
 
         BorderPane frame = new BorderPane(); // Main Frame that will hold every component and pane
         //frame.setStyle("-fx-background-color: #FFF9E9;");
@@ -143,8 +143,8 @@ public class AdminView extends AbstractAdminView{
 	}
 
 	protected void getButtonImages() {
-		/*image is a fileinputstream which is used to get the png files into the code,
-		 then we use that to create a imageview and store it into buttonImages array of imageviews which is latter used to get the icons for buttons
+		/*image is a fileInputStream which is used to get the png files into the code,
+		 then we use that to create a imageview and store it into buttonImages array of ImageViews which is latter used to get the icons for buttons
 		 */
 		String os = System.getProperty("os.name").toLowerCase();
 
@@ -197,7 +197,7 @@ public class AdminView extends AbstractAdminView{
 					alert = new Alert(AlertType.ERROR);
 					alert.setContentText("Resources Missing!Contact your Admin!\nErrorCode:104");
 					alert.show();
-					e.printStackTrace();
+					e.fillInStackTrace();
 				}
 			}
 		} else if (os.contains("mac")) {
@@ -246,7 +246,7 @@ public class AdminView extends AbstractAdminView{
 					alert = new Alert(AlertType.ERROR);
 					alert.setContentText("Resources Missing!Contact your Admin!\nErrorCode:104");
 					alert.show();
-					e.printStackTrace();
+					e.fillInStackTrace();
 				}
 			}
 		}

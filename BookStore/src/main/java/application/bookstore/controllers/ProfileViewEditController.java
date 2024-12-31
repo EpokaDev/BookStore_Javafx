@@ -26,7 +26,7 @@ public class ProfileViewEditController implements DatabaseConnector {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.fillInStackTrace();
         }
     }
 
@@ -47,7 +47,7 @@ public class ProfileViewEditController implements DatabaseConnector {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.fillInStackTrace();
         }
     }
 
@@ -86,7 +86,7 @@ public class ProfileViewEditController implements DatabaseConnector {
                 }
             }
         } catch (SQLException | UsernameAlreadyExistsException e) {
-            e.printStackTrace();
+            e.fillInStackTrace();
         }
     }
 
@@ -127,7 +127,7 @@ public class ProfileViewEditController implements DatabaseConnector {
                 }
             }
         } catch (SQLException | EmailAlreadyExistsException e) {
-            e.printStackTrace();
+            e.fillInStackTrace();
         }
     }
 
@@ -149,7 +149,7 @@ public class ProfileViewEditController implements DatabaseConnector {
                     }
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
+                e.fillInStackTrace();
             }
     }
 
@@ -188,7 +188,7 @@ public class ProfileViewEditController implements DatabaseConnector {
                 }
             }
         } catch (SQLException | PasswordAlreadyExistsException e) {
-            e.printStackTrace();
+            e.fillInStackTrace();
         }
     }
 }

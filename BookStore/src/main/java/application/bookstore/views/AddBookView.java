@@ -48,7 +48,7 @@ public class AddBookView {
     private static final String PHONE_PATTERN = "\\d{10}";
 
 
-    public Scene showView(Stage stage) throws Exception {
+    public Scene showView(Stage stage) {
         BorderPane mainPane = new BorderPane();
         pane = createBookEntryForm();
         HBox hbox = new HBox();

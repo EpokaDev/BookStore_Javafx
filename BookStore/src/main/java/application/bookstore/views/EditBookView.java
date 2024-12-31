@@ -42,7 +42,7 @@ public class EditBookView {
         this.book = book;
     }
 
-    public Scene showView(Stage stage) throws Exception {
+    public Scene showView(Stage stage) {
         BorderPane mainPane = new BorderPane();
         pane = createBookEntryForm();
         HBox hbox = new HBox();

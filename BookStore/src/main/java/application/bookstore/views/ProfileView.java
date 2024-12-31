@@ -1,9 +1,7 @@
 package application.bookstore.views;
 
 import application.bookstore.controllers.ProfileViewEditController;
-import application.bookstore.models.Role;
 import application.bookstore.models.User;
-import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;

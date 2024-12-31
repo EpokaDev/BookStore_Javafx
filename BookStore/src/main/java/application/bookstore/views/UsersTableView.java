@@ -3,31 +3,21 @@ package application.bookstore.views;
 import application.bookstore.auxiliaries.DatabaseConnector;
 import application.bookstore.controllers.UsersTableController;
 import application.bookstore.models.User;
-import application.bookstore.views.AddNewUserDialog;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.stage.Stage;
 
-import java.sql.*;
-import java.util.Optional;
 
 public class UsersTableView extends VBox implements DatabaseConnector {
 
-    private TableView<User> tableView;
+    private final TableView<User> tableView;
     private TableColumn<User, String> firstNameColumn;
     private TableColumn<User, String> lastNameColumn;
     private TableColumn<User, String> emailColumn;
@@ -38,7 +28,7 @@ public class UsersTableView extends VBox implements DatabaseConnector {
 
     private Button addButton;
     private Button removeButton;
-    private ObservableList<User> users;
+    private final ObservableList<User> users;
 
     public UsersTableView(ObservableList<User> currentUsers) {
         this.users=currentUsers;
