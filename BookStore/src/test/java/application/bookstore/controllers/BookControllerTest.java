@@ -656,7 +656,6 @@ class BookControllerTest {
             assertThrows(RuntimeException.class, () -> {
                 BookController.generateBill(testUser, selectedBooks, amount);
             });
-
         });
 
         deleteDirectory(billsFolder);
