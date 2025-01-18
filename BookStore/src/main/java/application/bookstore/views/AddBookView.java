@@ -27,19 +27,19 @@ public class AddBookView {
 
     private Label supplierPhoneLabel;
 
-    private TextField isbnTextField;
-    private TextField titleTextField;
-    private TextField authorTextField;
-    private TextField categoryTextField;
-    private TextField descriptionTextField;
-    private TextField originalPriceTextField;
-    private TextField sellingPriceTextField;
-    private TextField quantityTextField;
+    public TextField isbnTextField;
+    public TextField titleTextField;
+    public TextField authorTextField;
+    public TextField categoryTextField;
+    public TextField descriptionTextField;
+    public TextField originalPriceTextField;
+    public TextField sellingPriceTextField;
+    public TextField quantityTextField;
 
-    private TextField supplierNameTextField;
-    private TextField supplierEmailTextField;
-    private TextField supplierPhoneTextField;
-    private TextField supplierAddressTextField;
+    public TextField supplierNameTextField;
+    public TextField supplierEmailTextField;
+    public TextField supplierPhoneTextField;
+    public TextField supplierAddressTextField;
     private ImageView imageView;
     private File selectedImageFile;
     private Book book;

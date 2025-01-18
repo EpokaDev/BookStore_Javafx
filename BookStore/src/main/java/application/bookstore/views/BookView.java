@@ -41,14 +41,86 @@ public class BookView implements DatabaseConnector {
     private TextField search_field;
     private Label totalSumLabel;
     private ChoiceBox<Integer> choiceBox;
-    private final User user;
+    public final User user;
     private BookList bookList;
-    private ArrayList<Book> books;
+    public ArrayList<Book> books;
     private TableView<Book> tableView;
+    private EditBookView editBookView;
+    private AddBookView addBookView;
+
+    public BookView(StringProperty role, User user, EditBookView editBookView) {
+        this.role = role;
+        this.user = user;
+        this.editBookView = editBookView;
+    }
+
+    public BookView(StringProperty role, User user, AddBookView addBookView) {
+        this.role = role;
+        this.user = user;
+        this.addBookView = addBookView;
+    }
+
 
     public BookView(StringProperty role ,User user) {
         this.role = role;
         this.user = user;
+    }
+
+    public TableView<Book> getTableView() {
+        return tableView;
+    }
+
+    public ObservableList<Book> getSelectedBooks() {
+        return selectedBooks;
+    }
+
+    public void generateBill(BookController bookController) {
+        if (selectedBooks.isEmpty()) {
+            // Display error if no books are selected
+            Alerts.showAlert(Alert.AlertType.ERROR, "No Books Selected!", "Please select at least one book to generate a bill.");
+            return;
+        }
+
+        try {
+            // Calculate total amount
+            double totalAmount = calculateTotalSum();
+
+            // Generate the bill and save it to the database
+            bookController.generateBillToDatabase(selectedBooks, totalAmount, user);
+
+            // Display success message
+            Alerts.showAlert(Alert.AlertType.INFORMATION, "Success", "Bill generated successfully!");
+
+            // Clear selected books and refresh UI
+            selectedBooks.clear();
+            tableView.refresh();
+            totalSumLabel.setText("Total Sum: $0.00");
+        } catch (Exception e) {
+            // Handle any errors during bill generation
+            Alerts.showAlert(Alert.AlertType.ERROR, "Error", "Failed to generate bill: " + e.getMessage());
+        }
+    }
+
+    public void addBookButtonClicked() {
+        if (addBookView == null) {
+            addBookView = new AddBookView();
+        }
+        Stage popup = new Stage();
+        try {
+            popup.setScene(addBookView.showView(popup));
+            popup.show();
+        } catch (Exception e) {
+            Alerts.showAlert(Alert.AlertType.ERROR, "Error", "Failed to open Add Book View: " + e.getMessage());
+        }
+    }
+
+    public void editBook(Book book) {
+        if (editBookView == null) {
+            editBookView = new EditBookView(book); // Fallback for production
+        }
+        Stage popup = new Stage();
+        popup.setScene(editBookView.showView(popup));
+        popup.show();
     }
 
     public Scene showView(Stage stage) {
@@ -450,7 +522,7 @@ public class BookView implements DatabaseConnector {
         return addBook;
     }
 
-    private void filterTable(String selectedCategory, String searchText) {
+    public void filterTable(String selectedCategory, String searchText) {
         Predicate<Book> predicate = book -> {
             boolean categoryMatch = "All".equals(selectedCategory) || book.getCategory().equalsIgnoreCase(selectedCategory);
             boolean titleMatch = searchText.isEmpty() || book.getTitle().toLowerCase().contains(searchText.toLowerCase());
@@ -497,4 +569,5 @@ public class BookView implements DatabaseConnector {
         double totalSum = calculateTotalSum();
         totalSumLabel.setText("Total Sum: " + String.format("%.2f", totalSum));
     }
+
 }
