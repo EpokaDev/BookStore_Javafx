@@ -696,6 +696,4 @@ class BookControllerTest {
         billsFolder.setWritable(true);
         billsFolder.delete();
     }
-
-
 }

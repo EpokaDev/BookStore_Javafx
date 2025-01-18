@@ -8,11 +8,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.Button;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-
+import javafx.scene.control.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -26,190 +22,171 @@ public class UsersTableController implements DatabaseConnector {
     private final TableColumn<User, String> firstNameColumn;
     private final TableColumn<User, String> lastNameColumn;
     private final TableColumn<User, String> emailColumn;
-    private final TableColumn<User,String> userNameColumn;
+    private final TableColumn<User, String> userNameColumn;
     private final TableColumn<User, String> passwordColumn;
     private final TableColumn<User, String> genderColumn;
     private final TableColumn<User, String> roleColumn;
     private final Button addButton;
     private final Button removeButton;
 
-    public UsersTableController(UsersTableView view,ObservableList<User> currentUsers) {
+    public UsersTableController(UsersTableView view, ObservableList<User> currentUsers) {
 
-        this.tableView=view.getTableView();
-        this.users=currentUsers;
+        this.tableView = view.getTableView();
+        this.users = currentUsers;
 
-        firstNameColumn=view.getFirstNameColumn();
-        lastNameColumn=view.getLastNameColumn();
-        emailColumn=view.getEmailColumn();
-        userNameColumn=view.getUserNameColumn();
-        passwordColumn=view.getPasswordColumn();
-        genderColumn=view.getGenderColumn();
-        roleColumn=view.getRoleColumn();
+        this.firstNameColumn = view.getFirstNameColumn();
+        this.lastNameColumn = view.getLastNameColumn();
+        this.emailColumn = view.getEmailColumn();
+        this.userNameColumn = view.getUserNameColumn();
+        this.passwordColumn = view.getPasswordColumn();
+        this.genderColumn = view.getGenderColumn();
+        this.roleColumn = view.getRoleColumn();
 
-        addButton=view.getAddButton();
-        removeButton=view.getRemoveButton();
+        this.addButton = view.getAddButton();
+        this.removeButton = view.getRemoveButton();
 
         Listener(view);
     }
 
-    private void Listener(UsersTableView view)
-    {
-        firstNameColumn.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<User, String>>() {
-            @Override
-            public void handle(TableColumn.CellEditEvent<User, String> event) {
-                User user = event.getRowValue();
-                user.setFirstName(event.getNewValue());
-                updateRowInDatabase(user,"firstName",user.getFirstName(),"userName", user.getUsername());
-            }
+    private void Listener(UsersTableView view) {
+        // OnEditCommit for various columns
+        firstNameColumn.setOnEditCommit(event -> {
+            User user = event.getRowValue();
+            user.setFirstName(event.getNewValue());
+            updateRowInDatabase(user, "firstName", user.getFirstName(), "userName", user.getUsername());
         });
 
-        lastNameColumn.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<User, String>>() {
-            @Override
-            public void handle(TableColumn.CellEditEvent<User, String> event) {
-                User user = event.getRowValue();
-                user.setLastName(event.getNewValue());
-                updateRowInDatabase(user,"lastName",user.getLastName(),"userName", user.getUsername());
-            }
-        });
-        emailColumn.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<User, String>>() {
-            @Override
-            public void handle(TableColumn.CellEditEvent<User, String> event) {
-                User user = event.getRowValue();
-                user.setEmail(event.getNewValue());
-                updateRowInDatabase(user,"email",user.getEmail(),"userName", user.getUsername());
-
-            }
+        lastNameColumn.setOnEditCommit(event -> {
+            User user = event.getRowValue();
+            user.setLastName(event.getNewValue());
+            updateRowInDatabase(user, "lastName", user.getLastName(), "userName", user.getUsername());
         });
 
-        userNameColumn.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<User, String>>() {
-            @Override
-            public void handle(TableColumn.CellEditEvent<User, String> event) {
-                User user = event.getRowValue();
-                user.setUsername(event.getNewValue());
-                updateRowInDatabase(user,"userName",user.getUsername(),"password", user.getPassword());
-                //only here we condtion with the password since we are changing the username
-            }
+        emailColumn.setOnEditCommit(event -> {
+            User user = event.getRowValue();
+            user.setEmail(event.getNewValue());
+            updateRowInDatabase(user, "email", user.getEmail(), "userName", user.getUsername());
         });
 
-        passwordColumn.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<User, String>>() {
-            @Override
-            public void handle(TableColumn.CellEditEvent<User, String> event) {
-                User user = event.getRowValue();
-                user.setPassword(event.getNewValue());
-                updateRowInDatabase(user,"password",user.getPassword(),"userName", user.getUsername());
-            }
-        });
-        genderColumn.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<User, String>>() {
-            @Override
-            public void handle(TableColumn.CellEditEvent<User, String> event) {
-                User user = event.getRowValue();
-                user.setGender(event.getNewValue());
-                updateRowInDatabase(user,"gender",user.getGender(),"userName", user.getUsername());
-            }
-        });
-        roleColumn.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<User, String>>() {
-            @Override
-            public void handle(TableColumn.CellEditEvent<User, String> event) {
-                User user = event.getRowValue();
-                user.setRole(event.getNewValue());
-                updateRowInDatabase(user,"Role",user.getRoleString(),"userName",user.getUsername());
-            }
+        userNameColumn.setOnEditCommit(event -> {
+            User user = event.getRowValue();
+            user.setUsername(event.getNewValue());
+            // Notice the condition column is "password" because you want to match unique records
+            // or however you identify them. Adjust as needed.
+            updateRowInDatabase(user, "userName", user.getUsername(), "password", user.getPassword());
         });
 
+        passwordColumn.setOnEditCommit(event -> {
+            User user = event.getRowValue();
+            user.setPassword(event.getNewValue());
+            updateRowInDatabase(user, "password", user.getPassword(), "userName", user.getUsername());
+        });
+
+        genderColumn.setOnEditCommit(event -> {
+            User user = event.getRowValue();
+            user.setGender(event.getNewValue());
+            updateRowInDatabase(user, "gender", user.getGender(), "userName", user.getUsername());
+        });
+
+        roleColumn.setOnEditCommit(event -> {
+            User user = event.getRowValue();
+            user.setRole(event.getNewValue());
+            updateRowInDatabase(user, "Role", user.getRoleString(), "userName", user.getUsername());
+        });
+
+        // Add button
         addButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                try
-                {
+                try {
                     Dialog<User> userDialog = new AddNewUserDialog(
-                            new User(new SimpleStringProperty(""),new SimpleStringProperty(""),
-                                    new SimpleStringProperty(""),new SimpleStringProperty(""),
-                                    new SimpleStringProperty(""),new SimpleStringProperty(""),
-                                    new SimpleStringProperty("")));
+                            new User(
+                                    new SimpleStringProperty(""),
+                                    new SimpleStringProperty(""),
+                                    new SimpleStringProperty(""),
+                                    new SimpleStringProperty(""),
+                                    new SimpleStringProperty(""),
+                                    new SimpleStringProperty(""),
+                                    new SimpleStringProperty("")
+                            )
+                    );
                     Optional<User> result = userDialog.showAndWait();
                     if (result.isPresent()) {
                         User user = result.get();
                         add(user);
                     }
-                }catch (Exception e)
-                {
+                } catch (Exception e) {
                     System.out.println("Something wrong with the dialog");
-                    e.fillInStackTrace();
+                    e.printStackTrace();
                 }
-
             }
         });
 
-        removeButton.setOnAction(e->
-        {
+        // Remove button
+        removeButton.setOnAction(e -> {
             int row = tableView.getSelectionModel().getSelectedIndex();
-
-            if (row >= 0 && row < tableView.getItems().size()) {
-                User u = tableView.getItems().get(row);
-
-                //Removing from database
-                String query = "DELETE FROM user where userName=?";
-                try {
-                    Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
-                    PreparedStatement preparedStatement = connection.prepareStatement(query);
-                    preparedStatement.setString(1, u.getUsername());
-                    int rowsAffected = preparedStatement.executeUpdate();
-                } catch (SQLException ex) {
-                    System.out.println("Did not sign in to DB");
-                    ex.fillInStackTrace();
-                }
-
-                //removing from tableView and users
-                removeRow(row);
-            }
+            removeRow(row);
         });
-}
+    }
 
-    private void updateRowInDatabase(User user,String columnName,String newValue,String conditionColumn,String conditionValue) {
-        String query = "UPDATE user SET "+ columnName+"=? where "+conditionColumn+"=?";//columName=newValue,condition=conditionValue
-        try {
-            Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1,newValue);
-            preparedStatement.setString(2,conditionValue);
+    void updateRowInDatabase(User user, String columnName, String newValue,
+                             String conditionColumn, String conditionValue) {
+        String query = "UPDATE user SET " + columnName + " = ? WHERE " + conditionColumn + " = ?";
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setString(1, newValue);
+            preparedStatement.setString(2, conditionValue);
             preparedStatement.executeUpdate();
+
         } catch (SQLException ex) {
             System.out.println("Did not sign in to DB");
-            ex.fillInStackTrace();
+            ex.printStackTrace();
         }
     }
+
     public void add(User user) {
-        //Adding user to the list
-        users.add(user); //will also automatically be added to the tableView
+        // 1) Add to the ObservableList (which also updates the table)
+        users.add(user);
 
-        for(User u:users)
-        {
-            System.out.println(u);
-        }
+        // 2) Add to the database
+        String query = "INSERT INTO user (firstName, lastName, email, userName, password, gender, Role) VALUES (?,?,?,?,?,?,?);";
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-        //adding user to database
-        String query="INSERT INTO user (firstName, lastName, email, userName, password, gender, Role) VALUES" +
-                "(?,?,?,?,?,?,?);";
-        try {
-            Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1,user.getFirstName());
-            preparedStatement.setString(2,user.getLastName());
-            preparedStatement.setString(3,user.getEmail());
-            preparedStatement.setString(5,user.getPassword());
-            preparedStatement.setString(4,user.getUsername());
-            preparedStatement.setString(6,user.getGender());
-            preparedStatement.setString(7,user.getRoleString());
+            preparedStatement.setString(1, user.getFirstName());
+            preparedStatement.setString(2, user.getLastName());
+            preparedStatement.setString(3, user.getEmail());
+            preparedStatement.setString(4, user.getUsername());
+            preparedStatement.setString(5, user.getPassword());
+            preparedStatement.setString(6, user.getGender());
+            preparedStatement.setString(7, user.getRoleString());
 
             preparedStatement.executeUpdate();
+
         } catch (SQLException ex) {
             System.out.println("Problem when adding user");
-            ex.fillInStackTrace();
+            ex.printStackTrace();
         }
+    }
 
+    public void removeRow(int row) {
+        if (row >= 0 && row < tableView.getItems().size()) {
+            User userToRemove = tableView.getItems().get(row);
+
+            // 1) Remove from DB
+            String query = "DELETE FROM user WHERE userName = ?";
+            try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
+                 PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setString(1, userToRemove.getUsername());
+                preparedStatement.executeUpdate();
+            } catch (SQLException ex) {
+                System.out.println("Did not sign in to DB");
+                ex.printStackTrace();
+            }
+
+            // 2) Remove from the list/table
+            tableView.getItems().remove(row);
+        }
     }
-    public void removeRow(int row)
-    {
-        tableView.getItems().remove(row);
-    }
-    }
+}
