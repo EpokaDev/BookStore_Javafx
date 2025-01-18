@@ -12,7 +12,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.9.2</junit.version>
-        <javafx.version>20.0.1</javafx.version> <!-- Extracted common version -->
+        <javafx.version>21.0.1</javafx.version> <!-- Extracted common version -->
     </properties>
 
     <repositories>
@@ -96,7 +96,7 @@
         <dependency>
             <groupId>org.testfx</groupId>
             <artifactId>testfx-core</artifactId>
-            <version>4.0.15-alpha</version>
+            <version>4.0.17</version>
             <scope>test</scope>
         </dependency>
         <dependency>

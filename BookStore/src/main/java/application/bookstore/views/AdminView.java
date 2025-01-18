@@ -153,7 +153,7 @@ public class AdminView extends AbstractAdminView{
 		return new Scene(frame, 1000 , 720 );
 	}
 
-	protected void getButtonImages() {
+	public void getButtonImages() {
 		/*image is a fileInputStream which is used to get the png files into the code,
 		 then we use that to create a imageview and store it into buttonImages array of ImageViews which is latter used to get the icons for buttons
 		 */

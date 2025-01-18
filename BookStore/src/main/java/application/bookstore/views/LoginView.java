@@ -24,14 +24,13 @@ import javafx.stage.Stage;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-
 public class LoginView implements DatabaseConnector {
     private GridPane grid;
     private Button btn;
     private TextField userTextField;
     private PasswordField passwordField;
-    public Scene showView(Stage stage)
-    {
+
+    public Scene showView(Stage stage) {
         StackPane root = new StackPane();
 
         try {
@@ -40,14 +39,12 @@ public class LoginView implements DatabaseConnector {
 
             String osName = System.getProperty("os.name").toLowerCase();
 
-            if (osName.contains("win"))
-            {
+            if (osName.contains("win")) {
                 logoFile = new FileInputStream("C:\\Users\\alvin\\OneDrive\\Desktop\\SW_testing\\Bookstore_javfx_testing\\BookStore_Javafx\\BookStore\\Images\\bookStoreLogo2.png");
-                backgroundFile= new FileInputStream("C:\\Users\\alvin\\OneDrive\\Desktop\\SW_testing\\Bookstore_javfx_testing\\BookStore_Javafx\\BookStore\\Images\\3d-render-wooden-table-looking-out-blurred-background-with-bookcase.jpg");
-            }else
-            {
-                 logoFile = new FileInputStream("/Users/regiloshi/Documents/Documents - Regi’s MacBook Air (2)/Projects/BookStore_Javafx/BookStore/Images/bookStoreLogo2.png");
-                 backgroundFile = new FileInputStream("/Users/regiloshi/Documents/Documents - Regi’s MacBook Air (2)/Projects/BookStore_Javafx/BookStore/Images/3d-render-wooden-table-looking-out-blurred-background-with-bookcase.jpg");
+                backgroundFile = new FileInputStream("C:\\Users\\alvin\\OneDrive\\Desktop\\SW_testing\\Bookstore_javfx_testing\\BookStore_Javafx\\BookStore\\Images\\3d-render-wooden-table-looking-out-blurred-background-with-bookcase.jpg");
+            } else {
+                logoFile = new FileInputStream("/Users/regiloshi/Documents/Documents - Regi’s MacBook Air (2)/Projects/BookStore_Javafx/BookStore/Images/bookStoreLogo2.png");
+                backgroundFile = new FileInputStream("/Users/regiloshi/Documents/Documents - Regi’s MacBook Air (2)/Projects/BookStore_Javafx/BookStore/Images/3d-render-wooden-table-looking-out-blurred-background-with-bookcase.jpg");
             }
 
             Image logoImage = new Image(logoFile);
@@ -56,17 +53,16 @@ public class LoginView implements DatabaseConnector {
             ImageView logo = new ImageView(logoImage);
             ImageView background = new ImageView(backgroundImage);
 
-            // Set the logo position at the top center
             StackPane.setAlignment(logo, Pos.TOP_CENTER);
-            background.setFitWidth(1000); // Set the width to match the scene width
+            background.setFitWidth(1000);
             background.setFitHeight(700);
 
-            // Add the background image to the bottom
             root.getChildren().addAll(background, logo);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
-        grid=new GridPane();
+
+        grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(15);
         grid.setVgap(15);
@@ -76,14 +72,15 @@ public class LoginView implements DatabaseConnector {
         welcomeMessage.setFill(javafx.scene.paint.Color.WHITE);
         welcomeMessage.setTextAlignment(TextAlignment.CENTER);
         welcomeMessage.setFont(Font.font("Arial", FontWeight.NORMAL, 50));
-        grid.add(welcomeMessage,0,0,2,2);
+        grid.add(welcomeMessage, 0, 0, 2, 2);
 
         Label userName = new Label("Username:");
         userName.setTextFill(javafx.scene.paint.Color.WHITE);
         userName.setFont(Font.font(20));
-        grid.add(userName, 0,4 );
+        grid.add(userName, 0, 4);
 
-         userTextField = new TextField();
+        userTextField = new TextField();
+        userTextField.setId("userTextField"); //  fx:id
         grid.add(userTextField, 1, 4);
 
         Label password_label = new Label("Password:");
@@ -92,21 +89,21 @@ public class LoginView implements DatabaseConnector {
         grid.add(password_label, 0, 5);
 
         passwordField = new PasswordField();
+        passwordField.setId("passwordField"); //  fx:id
         grid.add(passwordField, 1, 5);
 
         btn = new Button("Log in");
+        btn.setId("loginButton"); //  fx:id
         btn.setStyle("-fx-background-color: #808080;");
         btn.setTextFill(Color.WHITE);
         btn.setFont(Font.font(20));
-        HBox hbtn=new HBox(btn);
+        HBox hbtn = new HBox(btn);
         hbtn.setAlignment(Pos.CENTER);
-        grid.add(hbtn, 0, 7,2,1);
+        grid.add(hbtn, 0, 7, 2, 1);
 
         stage.setTitle("Log in");
 
         root.getChildren().add(grid);
-
-        stage.setTitle("Log in");
 
         new LoginController(this, stage);
 
@@ -121,23 +118,19 @@ public class LoginView implements DatabaseConnector {
         return new Scene(root, 1000, 700);
     }
 
-
-    public  GridPane getMainPane()
-    {
-    return this.grid;
+    public GridPane getMainPane() {
+        return this.grid;
     }
 
-    public Button getBtn()
-    {
+    public Button getBtn() {
         return btn;
     }
 
-    public TextField getUserTextField()
-    {
+    public TextField getUserTextField() {
         return userTextField;
     }
-    public PasswordField getPasswordField()
-    {
+
+    public PasswordField getPasswordField() {
         return passwordField;
     }
 }
