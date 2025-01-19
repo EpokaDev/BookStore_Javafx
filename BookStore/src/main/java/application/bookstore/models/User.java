@@ -1,5 +1,6 @@
 package application.bookstore.models;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 
@@ -22,7 +23,15 @@ public class User {
 
     //The StringProperties are used in the UsersTableView to set the CellValueFactory
 
-    public User(){}
+    public User() {
+        this.firstName = new SimpleStringProperty();
+        this.lastName = new SimpleStringProperty();
+        this.email = new SimpleStringProperty();
+        this.username = new SimpleStringProperty();
+        this.password = new SimpleStringProperty();
+        this.gender = new SimpleStringProperty();
+        this.role = new SimpleStringProperty();
+    }
 
     public User(StringProperty firstName, StringProperty lastName,
                 StringProperty email, StringProperty username, StringProperty password,

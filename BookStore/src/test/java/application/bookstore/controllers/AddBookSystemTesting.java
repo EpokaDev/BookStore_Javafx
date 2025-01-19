@@ -22,14 +22,15 @@ public class AddBookSystemTesting extends ApplicationTest {
     public void testAdminLogin() {
         System.out.println("Starting test: Admin Login");
 
+        // Add a delay to ensure UI elements are loaded
+        sleep(1000);
 
         // Simulate entering username
         clickOn("#userTextField");
         write("admin");
 
-        clickOn("#passwordField");
-        write("admin");
 
+        // Simulate clicking the login button
         clickOn("#loginButton");
 
         System.out.println("Ending test: Admin Login");

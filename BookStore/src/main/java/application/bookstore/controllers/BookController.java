@@ -58,6 +58,21 @@ public class BookController implements DatabaseConnector {
         }
     }
 
+    public static void updateQuantity(ObservableList<Book> selectedBooks, Connection connection) {
+        for (Book book : selectedBooks) {
+            String updateSQL = "UPDATE book SET quantity = ? WHERE ISBN = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(updateSQL)) {
+                int newQuantity = book.getQuantity() - book.getChosenQuantity();
+                preparedStatement.setInt(1, newQuantity);
+                preparedStatement.setString(2, book.getISBN());
+                preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+
     public static void deleteBook(String isbn) {
         try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
             String deleteSql = "DELETE FROM Book WHERE ISBN = ?";
@@ -69,6 +84,19 @@ public class BookController implements DatabaseConnector {
             System.out.println(e.getMessage());
         }
     }
+
+    public static void deleteBook(String isbn, Connection connection) {
+        try {
+            String deleteSql = "DELETE FROM Book WHERE ISBN = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(deleteSql)) {
+                preparedStatement.setString(1, isbn);
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
 
     public static void generateBillToDatabase(ObservableList<Book> selectedBooks, double amount, User user) {
         if(amount < 0){
