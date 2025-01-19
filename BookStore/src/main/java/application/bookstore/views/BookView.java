@@ -464,6 +464,7 @@ public class BookView implements DatabaseConnector {
         });
 
         Button goBackButton = new Button("Go Back");
+        goBackButton.setId("goBack");
         goBackButton.setMinWidth(50);
         goBackButton.setMinHeight(50);
         goBackButton.setOnAction(event -> {
@@ -507,6 +508,7 @@ public class BookView implements DatabaseConnector {
 
     private static Button getButton() {
         Button addBook = new Button("Add Book");
+        addBook.setId("addBookButton");
         addBook.setOnAction(event -> {
             Stage popup = new Stage();
             AddBookView addBookView = new AddBookView();
@@ -556,7 +558,7 @@ public class BookView implements DatabaseConnector {
         imageCol.setMinWidth(160);
         return imageCol;
     }
-    private double calculateTotalSum() {
+    public double calculateTotalSum() {
         double totalSum = 0.0;
         for (Book book : selectedBooks) {
             double originalPrice = book.getSellingPrice();

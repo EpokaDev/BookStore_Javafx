@@ -42,6 +42,7 @@ class BookControllerUnitTesting {
         when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
     }
 
+
     @Test
     void testGenerateBill_ValidInput() throws IOException {
         User user = new User();

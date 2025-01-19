@@ -299,10 +299,11 @@ public class Book  implements DatabaseConnector {
         preparedStatement.setDouble(8, originalPrice);
         preparedStatement.setDouble(9, sellingPrice);
         preparedStatement.setInt(10, quantity);
+        System.out.println(preparedStatement);
         preparedStatement.executeUpdate();
       }
     } catch (SQLException e) {
-      e.fillInStackTrace();
+      e.printStackTrace();
     }
   }
   public void updateInDatabase() {

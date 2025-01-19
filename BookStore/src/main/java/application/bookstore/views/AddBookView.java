@@ -41,7 +41,7 @@ public class AddBookView {
     public TextField supplierPhoneTextField;
     public TextField supplierAddressTextField;
     private ImageView imageView;
-    private File selectedImageFile;
+    public File selectedImageFile;
     private Book book;
     private static final String ISBN_PATTERN = "\\d{13}";
     private static final String EMAIL_PATTERN = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}";
@@ -53,6 +53,7 @@ public class AddBookView {
         pane = createBookEntryForm();
         HBox hbox = new HBox();
         Button addBook = new Button("Add Book");
+        addBook.setId("confirm-Book");
         addBook.setMinHeight(50);
         addBook.setMinWidth(150);
         addBook.setOnAction(e -> {createBook(); stage.close();});
@@ -117,24 +118,37 @@ public class AddBookView {
         image_label.setStyle("-fx-font-size: 16;");
 
         isbnTextField = new TextField();
+        isbnTextField.setId("isbnTextField");
         titleTextField = new TextField();
+        titleTextField.setId("titleTextField");
         authorTextField = new TextField();
+        authorTextField.setId("authorTextField");
         categoryTextField = new TextField();
+        categoryTextField.setId("categoryTextField");
         descriptionTextField = new TextField();
+        descriptionTextField.setId("descriptionTextField");
         originalPriceTextField = new TextField();
+        originalPriceTextField.setId("originalPriceTextField");
         sellingPriceTextField = new TextField();
+        sellingPriceTextField.setId("sellingPriceTextField");
         quantityTextField = new TextField();
+        quantityTextField.setId("quantityTextField");
 
         supplierNameTextField = new TextField();
+        supplierNameTextField.setId("supplierNameTextField");
         supplierEmailTextField = new TextField();
+        supplierEmailTextField.setId("supplierEmailTextField");
         supplierPhoneTextField = new TextField();
+        supplierPhoneTextField.setId("supplierPhoneTextField");
         supplierAddressTextField = new TextField();
+        supplierAddressTextField.setId("supplierAddressTextField");
 
         imageView = new ImageView();
         imageView.setFitWidth(150);
         imageView.setFitHeight(150);
         
         Button chooseImageButton = new Button("Choose Image");
+        chooseImageButton.setId("chooseImageButton");
         chooseImageButton.setMinHeight(50);
         chooseImageButton.setMinWidth(150);
         chooseImageButton.setOnAction(e -> chooseImage());
@@ -176,22 +190,23 @@ public class AddBookView {
     public void createBook() {
         try {
             if (!validateISBN(isbnTextField.getText())) {
-                Alerts.showAlert(Alert.AlertType.ERROR , "Invalid ISBN" , "Please enter a valid ISBN");
+                Alerts.showAlert(Alert.AlertType.ERROR, "Invalid ISBN", "Please enter a valid ISBN");
                 return;
             }
 
             if (!validateEmail(supplierEmailTextField.getText())) {
-                Alerts.showAlert(Alert.AlertType.ERROR , "Invalid Supplier Email" , "Please enter a valid Supplier Email");
+                Alerts.showAlert(Alert.AlertType.ERROR, "Invalid Supplier Email", "Please enter a valid Supplier Email");
                 return;
             }
 
             if (!validatePhoneNumber(supplierPhoneTextField.getText())) {
-                Alerts.showAlert(Alert.AlertType.ERROR , "Invalid Supplier Phone Number" , "Please enter a valid Phone Number");
+                Alerts.showAlert(Alert.AlertType.ERROR, "Invalid Supplier Phone Number", "Please enter a valid Phone Number");
                 return;
             }
 
-            Supplier supplier = new Supplier(supplierNameTextField.getText() , supplierEmailTextField.getText() ,
-                    supplierPhoneLabel.getText() , supplierAddressTextField.getText());
+            Supplier supplier = new Supplier(supplierNameTextField.getText(), supplierEmailTextField.getText(),
+                    supplierPhoneLabel.getText(), supplierAddressTextField.getText());
+
             book = new Book(
                     isbnTextField.getText(),
                     titleTextField.getText(),
@@ -203,13 +218,22 @@ public class AddBookView {
                     Double.parseDouble(sellingPriceTextField.getText()),
                     Integer.parseInt(quantityTextField.getText())
             );
-            book.saveImageLocally(selectedImageFile);
+
+            if (selectedImageFile != null) {
+                book.saveImageLocally(selectedImageFile);
+            } else {
+                book.saveImageLocally(new File("/Users/regiloshi/Downloads/Unknown-5.png"));
+            }
+
             book.saveToDatabase();
 
         } catch (NumberFormatException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         }
     }
+
+
+
 
     public Book getAddedBook() {
         return book;
