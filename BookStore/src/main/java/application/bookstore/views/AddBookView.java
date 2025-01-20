@@ -233,12 +233,6 @@ public class AddBookView {
     }
 
 
-
-
-    public Book getAddedBook() {
-        return book;
-    }
-
     private boolean validateISBN(String isbn) {
         Pattern pattern = Pattern.compile(ISBN_PATTERN);
         Matcher matcher = pattern.matcher(isbn);

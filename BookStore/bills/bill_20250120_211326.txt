@@ -1,7 +1,0 @@
-Sold by: John Doe Role: Admin
-
-Books:
-- Book One (Chosen Quantity: 2): $10.0Book One - $10.0
-- Book Two (Chosen Quantity: 1): $20.0Book Two - $20.0
-
-Total Amount: $50.0
