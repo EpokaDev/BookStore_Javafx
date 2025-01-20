@@ -179,11 +179,15 @@ public class BookView implements DatabaseConnector {
 
 
                     deleteButton.setOnAction(e -> {
-                        BookController.deleteBook(selectedBook.getISBN());
+                        try {
+                            Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
+                            BookController.deleteBook(selectedBook.getISBN(),connection);
                         tableView.getItems().remove(selectedBook);
                         tableView.refresh();
                         actionStage.close();
-                    });
+                    } catch (SQLException ex) {
+                            throw new RuntimeException(ex);
+                        }});
 
                     actionBox.setAlignment(Pos.CENTER);
                     actionBox.setSpacing(10);

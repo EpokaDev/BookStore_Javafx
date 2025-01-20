@@ -34,6 +34,7 @@ public class BookController implements DatabaseConnector {
                 writer.write(bookInfo);
             }
             writer.write("\nTotal Amount: $" + amount);
+
             updateQuantity(selectedBooks);
 
             System.out.println("Bill generated successfully. Filename: " + fileName);
@@ -73,17 +74,6 @@ public class BookController implements DatabaseConnector {
     }
 
 
-    public static void deleteBook(String isbn) {
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
-            String deleteSql = "DELETE FROM Book WHERE ISBN = ?";
-            try (PreparedStatement preparedStatement = connection.prepareStatement(deleteSql)) {
-                preparedStatement.setString(1, isbn);
-                preparedStatement.executeUpdate();
-            }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-    }
 
     public static void deleteBook(String isbn, Connection connection) {
         try {

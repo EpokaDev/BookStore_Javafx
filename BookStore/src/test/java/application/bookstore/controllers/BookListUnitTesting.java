@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import java.sql.SQLException;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -90,7 +91,20 @@ public class BookListUnitTesting {
         assertEquals("Book1", BookList.booksWithLowQuantity.get(0).getTitle());
     }
 
+    @Test
+    public void testGetBooksSQLException() throws Exception {
+        Connection mockConnection = mock(Connection.class);
+        Statement mockStatement = mock(Statement.class);
 
+        when(mockConnection.createStatement()).thenReturn(mockStatement);
+        when(mockStatement.executeQuery("SELECT * FROM Book")).thenThrow(new SQLException("Database error"));
+
+        Exception exception = assertThrows(RuntimeException.class, () -> {
+            bookList.getBooks(mockConnection);
+        });
+
+        assertEquals("java.sql.SQLException: Database error", exception.getMessage());
+    }
 
 
     @Test

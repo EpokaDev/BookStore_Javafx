@@ -78,6 +78,22 @@ class BookControllerUnitTesting {
     }
 
     @Test
+    void testUpdateQuantity_SQLException() throws SQLException {
+        Book book1 = new Book("12345", "Book One", "Author One", "Fiction", "A great book", 10.0, 15.0, 10);
+        book1.setChosenQuantity(5);
+        ObservableList<Book> books = FXCollections.observableArrayList(book1);
+
+        when(mockConnection.prepareStatement(anyString())).thenThrow(new SQLException("Database error"));
+
+        Exception exception = assertThrows(RuntimeException.class, () -> {
+            BookController.updateQuantity(books, mockConnection);
+        });
+
+        assertEquals("java.sql.SQLException: Database error", exception.getMessage());
+    }
+
+
+    @Test
     void testGenerateBillToDatabase_InvalidAmount() {
         User user = new User();
         user.setFirstName("John");
@@ -125,48 +141,6 @@ class BookControllerUnitTesting {
         verify(mockPreparedStatement, times(1)).executeUpdate();
     }
 
-    @Test
-    void testDeleteBookWithInternalConnection_ValidISBN() throws SQLException {
-        String isbn = "12345";
-
-        Connection mockConnection = mock(Connection.class);
-        PreparedStatement mockPreparedStatement = mock(PreparedStatement.class);
-
-        try (MockedStatic<DriverManager> mockedDriverManager = mockStatic(DriverManager.class)) {
-            mockedDriverManager.when(() -> DriverManager.getConnection(anyString(), anyString(), anyString()))
-                    .thenReturn(mockConnection);
-
-            when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
-
-            BookController.deleteBook(isbn);
-
-            verify(mockPreparedStatement, times(1)).setString(1, isbn);
-            verify(mockPreparedStatement, times(1)).executeUpdate();
-            verify(mockPreparedStatement, times(1)).close();
-            verify(mockConnection, times(1)).close();
-        }
-    }
-
-//    @Test
-//    void testDeleteBookWithInternalConnection_SQLException() {
-//        String isbn = "12345";
-//
-//        Connection mockConnection = mock(Connection.class);
-//        PreparedStatement mockPreparedStatement = mock(PreparedStatement.class);
-//
-//        try (MockedStatic<DriverManager> mockedDriverManager = mockStatic(DriverManager.class)) {
-//            mockedDriverManager.when(() -> DriverManager.getConnection(anyString(), anyString(), anyString()))
-//                    .thenReturn(mockConnection);
-//
-//            when(mockConnection.prepareStatement(anyString())).thenThrow(new SQLException("Database error"));
-//
-//            assertDoesNotThrow(() -> BookController.deleteBook(isbn));
-//
-//            verify(mockConnection, times(1)).close();
-//        } catch (SQLException e) {
-//            fail("Unexpected SQLException: " + e.getMessage());
-//        }
-//    }
 
 
 
