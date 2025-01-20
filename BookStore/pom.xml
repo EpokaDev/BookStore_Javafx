@@ -39,6 +39,7 @@
             <version>${javafx.version}</version>
         </dependency>
 
+
         <!-- Third-party libraries -->
         <dependency>
             <groupId>org.controlsfx</groupId>

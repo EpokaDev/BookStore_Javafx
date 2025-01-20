@@ -13,32 +13,30 @@ public class BookList implements DatabaseConnector {
     ArrayList<Book> books = new ArrayList<>();
     ArrayList<String> categories = new ArrayList<>();
     static ArrayList<Book> booksWithLowQuantity = new ArrayList<>();
-    public ArrayList<Book> getBooks() {
+    public ArrayList<Book> getBooks(Connection connection) {
+        books.clear();
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM Book");
             categories.add("All");
             while (resultSet.next()) {
                 Book book = new Book(resultSet.getString("ISBN"), resultSet.getString("name"),
                         resultSet.getString("author"), resultSet.getString("category"),
-                        resultSet.getInt("supplier") ,resultSet.getString("description"),
+                        resultSet.getInt("supplier"), resultSet.getString("description"),
                         new Image(resultSet.getString("bookURL")), resultSet.getDouble("original_price"),
                         resultSet.getDouble("selling_price"), resultSet.getInt("quantity"));
                 books.add(book);
                 categories.add(book.getCategory());
-                if(book.getQuantity() < 5){
+                if (book.getQuantity() < 5) {
                     booksWithLowQuantity.add(book);
                 }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
         }
         return books;
     }
+
     public static  void notifyLowQuantity() {
         StringBuilder notify = new StringBuilder();
         notify.append("Low Quantity for the following books:\n");

@@ -7,17 +7,13 @@ import javafx.collections.ObservableList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.util.List;
+import java.sql.*;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -81,20 +77,6 @@ class BookControllerUnitTesting {
         verify(mockPreparedStatement, times(1)).executeUpdate();
     }
 
-
-    @Test
-    void testDeleteBook_ValidISBN() throws SQLException {
-        String isbn = "12345";
-        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
-
-        BookController.deleteBook(isbn, mockConnection);
-
-        verify(mockPreparedStatement, times(1)).setString(1, isbn);
-        verify(mockPreparedStatement, times(1)).executeUpdate();
-    }
-
-
-
     @Test
     void testGenerateBillToDatabase_InvalidAmount() {
         User user = new User();
@@ -110,4 +92,82 @@ class BookControllerUnitTesting {
 
         assertEquals("Amount cannot be negative", exception.getMessage());
     }
+
+    @Test
+    void testDeleteBook_ValidISBN() throws SQLException {
+        String isbn = "12345";
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+
+        BookController.deleteBook(isbn, mockConnection);
+
+        verify(mockPreparedStatement, times(1)).setString(1, isbn);
+        verify(mockPreparedStatement, times(1)).executeUpdate();
+    }
+
+    @Test
+    void testDeleteBook_InvalidISBN() throws SQLException {
+        String isbn = "InvalidISBN";
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        doThrow(new SQLException("No such book")).when(mockPreparedStatement).executeUpdate();
+
+        assertDoesNotThrow(() -> BookController.deleteBook(isbn, mockConnection));
+    }
+
+    @Test
+    void testDeleteBook_SQLException() throws SQLException {
+        String isbn = "12345";
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        doThrow(new SQLException("Database error")).when(mockPreparedStatement).executeUpdate();
+
+        BookController.deleteBook(isbn, mockConnection);
+
+        verify(mockPreparedStatement, times(1)).setString(1, isbn);
+        verify(mockPreparedStatement, times(1)).executeUpdate();
+    }
+
+    @Test
+    void testDeleteBookWithInternalConnection_ValidISBN() throws SQLException {
+        String isbn = "12345";
+
+        Connection mockConnection = mock(Connection.class);
+        PreparedStatement mockPreparedStatement = mock(PreparedStatement.class);
+
+        try (MockedStatic<DriverManager> mockedDriverManager = mockStatic(DriverManager.class)) {
+            mockedDriverManager.when(() -> DriverManager.getConnection(anyString(), anyString(), anyString()))
+                    .thenReturn(mockConnection);
+
+            when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+
+            BookController.deleteBook(isbn);
+
+            verify(mockPreparedStatement, times(1)).setString(1, isbn);
+            verify(mockPreparedStatement, times(1)).executeUpdate();
+            verify(mockPreparedStatement, times(1)).close();
+            verify(mockConnection, times(1)).close();
+        }
+    }
+
+//    @Test
+//    void testDeleteBookWithInternalConnection_SQLException() {
+//        String isbn = "12345";
+//
+//        Connection mockConnection = mock(Connection.class);
+//        PreparedStatement mockPreparedStatement = mock(PreparedStatement.class);
+//
+//        try (MockedStatic<DriverManager> mockedDriverManager = mockStatic(DriverManager.class)) {
+//            mockedDriverManager.when(() -> DriverManager.getConnection(anyString(), anyString(), anyString()))
+//                    .thenReturn(mockConnection);
+//
+//            when(mockConnection.prepareStatement(anyString())).thenThrow(new SQLException("Database error"));
+//
+//            assertDoesNotThrow(() -> BookController.deleteBook(isbn));
+//
+//            verify(mockConnection, times(1)).close();
+//        } catch (SQLException e) {
+//            fail("Unexpected SQLException: " + e.getMessage());
+//        }
+//    }
+
+
+
 }

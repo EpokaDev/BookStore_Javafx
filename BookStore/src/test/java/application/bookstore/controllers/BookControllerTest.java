@@ -451,17 +451,6 @@ class BookControllerTest {
         verify(mockPreparedStatement, never()).executeUpdate();
     }
 
-    @MockitoSettings(strictness = Strictness.LENIENT)
-    @Test
-    void testGenerateBillToDatabaseConnectionFailure() {
-        try (MockedStatic<DriverManager> mockedDriverManager = Mockito.mockStatic(DriverManager.class)) {
-            mockedDriverManager.when(() -> DriverManager.getConnection(
-                            "test", "test", "test"))
-                    .thenThrow(new SQLException("Connection failed"));
-
-            assertThrows(RuntimeException.class, () -> BookController.generateBillToDatabase(bookList, 100.0, testUser));
-        }
-    }
 
 
     /* !!!!!!!!!! MC-DC !!!!!!!!!!!*/

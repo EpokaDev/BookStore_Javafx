@@ -30,6 +30,9 @@ import javafx.util.Callback;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.function.Predicate;
 
@@ -160,8 +163,12 @@ public class BookView implements DatabaseConnector {
                             Stage editStage = new Stage();
                             editStage.setScene(editBookView.showView(editStage));
                             editStage.show();
+
+                            Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
+
                             bookList = new BookList();
-                            books = bookList.getBooks();
+                            books = bookList.getBooks(connection);
+                            tableView.getItems().clear();
                             tableView.getItems().addAll(books);
                             tableView.refresh();
                         } catch (Exception ex) {
@@ -169,6 +176,7 @@ public class BookView implements DatabaseConnector {
                         }
                         actionStage.close();
                     });
+
 
                     deleteButton.setOnAction(e -> {
                         BookController.deleteBook(selectedBook.getISBN());
@@ -392,12 +400,19 @@ public class BookView implements DatabaseConnector {
         tableView.getColumns().addAll(selectCol , isbnCol , titleCol , authorCol ,
                 categoryCol , descriptionCol , imageCol  , quantityCol);
 
-        bookList = new BookList();
-        books = bookList.getBooks();
-        if(!(user.getRoleString().equalsIgnoreCase("librarian")) && !(books.isEmpty())){
-            BookList.notifyLowQuantity();
+        try {
+            Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
+            bookList = new BookList();
+            books = bookList.getBooks(connection); // Pass the connection to getBooks
+            if (!(user.getRoleString().equalsIgnoreCase("librarian")) && !(books.isEmpty())) {
+                BookList.notifyLowQuantity();
+            }
+            tableView.getItems().clear(); // Clear existing items to avoid duplicates
+            tableView.getItems().addAll(books);
+        } catch (SQLException ex) {
+            throw new RuntimeException("Failed to load books from the database", ex);
         }
-        tableView.getItems().addAll(books);
+
 
         VBox tables = new VBox();
         tables.getChildren().addAll(tableView , buying_tableView);

@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class BookViewIntegrationTest extends ApplicationTest {
-
+//
 //    private BookView bookView;
 //    private BookList mockBookList;
 //    private BookController mockBookController;
@@ -58,13 +58,13 @@ class BookViewIntegrationTest extends ApplicationTest {
 //    static void setupJavaFX() {
 //        if (!Platform.isFxApplicationThread()) {
 //            try {
-//                Platform.startup(() -> {});
+//                Platform.startup(() -> {
+//                });
 //            } catch (IllegalStateException e) {
 //                // Ignore if already started
 //            }
 //        }
 //    }
-//
 //
 //
 //    @Override
@@ -160,7 +160,6 @@ class BookViewIntegrationTest extends ApplicationTest {
 //    }
 //
 //
-//
 //    @Test
 //    void testEditBookFunctionality() {
 //        Platform.runLater(() -> {
@@ -181,6 +180,6 @@ class BookViewIntegrationTest extends ApplicationTest {
 //            verify(mockEditBookView, times(1)).showView(any(Stage.class));
 //        });
 //    }
-
 }
+
 
