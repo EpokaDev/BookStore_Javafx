@@ -4,6 +4,7 @@ import application.bookstore.Main;
 import application.bookstore.models.Book;
 import application.bookstore.views.AddBookView;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.image.ImageView;
@@ -19,6 +20,7 @@ import org.testfx.framework.junit5.ApplicationTest;
 import java.io.File;
 import java.util.Random;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.base.NodeMatchers.isVisible;
@@ -70,7 +72,7 @@ public class BookSystemTesting extends ApplicationTest {
         // Fill in other valid details
         clickOn("#titleTextField").write("Valid Book Title");
         clickOn("#authorTextField").write("Valid Author");
-        clickOn("#categoryTextField").write("Fiction");
+        clickOn("#categoryTextField").write("TestFiction");
         clickOn("#descriptionTextField").write("This is a valid description.");
         clickOn("#originalPriceTextField").write("20.00");
         clickOn("#sellingPriceTextField").write("25.00");
@@ -324,8 +326,8 @@ public class BookSystemTesting extends ApplicationTest {
         sleep(3000);
 
     }
-
-
+//
+//
 //    @Order(7)
 //    @Test
 //    public void testGenerateBill() throws Exception {
@@ -340,20 +342,90 @@ public class BookSystemTesting extends ApplicationTest {
 //        clickOn("#bookstoreButton");
 //
 //        // Locate and select the checkbox
-//        interact(() -> clickOn("#checkbox-0000000000000"));
+//        clickOn("#checkbox-0000000000000");
 //
 //        // Locate the ChoiceBox and set quantity
-//        ChoiceBox<Integer> choiceBox = lookup("#quantity-choice-0000000000000").query();
-//        interact(() -> choiceBox.setValue(2));
+//        clickOn("#quantity-choice-0000000000000");
+//        clickOn("12");
 //
-//        // Click on generate bill
-//        interact(() -> clickOn("#generateBill"));
+//        clickOn("#generateBill");
 //
-//        verifyThat("#generateBill", hasText("Generate Bill"));
 //    }
-//
 
-       @Order(8)
+        @Order(8)
+    @Test
+    public void testClearButton() throws Exception {
+        // Simulate entering admin credentials
+        clickOn("#userTextField").write("admin");
+        clickOn("#passwordField").write("admin");
+        clickOn("#loginButton");
+        verifyThat(".alert", isVisible());
+        clickOn(".alert .button");
+
+        // Navigate to bookstore
+        clickOn("#bookstoreButton");
+
+        // Locate and select the checkbox
+        interact(() -> clickOn("#checkbox-0000000000000"));
+
+        // Locate the ChoiceBox and set quantity
+        ChoiceBox<Integer> choiceBox = lookup("#quantity-choice-0000000000000").query();
+        interact(() -> choiceBox.setValue(2));
+
+        clickOn("#clearButton");
+        TableView<Book> buying_tableView = lookup("#buying_tableView").query();
+        assertEquals(buying_tableView.getItems().size(), 0);
+    }
+
+    @Order(9)
+    @Test
+    public void testFilter() throws Exception {
+        // Simulate entering admin credentials
+        clickOn("#userTextField").write("admin");
+        clickOn("#passwordField").write("admin");
+        clickOn("#loginButton");
+        verifyThat(".alert", isVisible());
+        clickOn(".alert .button");
+
+        // Navigate to bookstore
+        clickOn("#bookstoreButton");
+
+        clickOn("#filter-combo-box");
+
+
+        clickOn("#filter-item-newTestCategory");
+
+        TableView<Book> bookTableView = lookup("#tableView").query();
+        sleep(2000);
+        System.out.println(bookTableView.getItems());
+        assertEquals(bookTableView.getItems().size(), 1);
+    }
+
+    @Order(10)
+    @Test
+    public void testSearch() throws Exception {
+        // Simulate entering admin credentials
+        clickOn("#userTextField").write("admin");
+        clickOn("#passwordField").write("admin");
+        clickOn("#loginButton");
+        verifyThat(".alert", isVisible());
+        clickOn(".alert .button");
+
+        // Navigate to bookstore
+        clickOn("#bookstoreButton");
+
+        clickOn("#search_field");
+        write("newTestTitle");
+
+        clickOn("#search-button");
+
+        TableView<Book> bookTableView = lookup("#tableView").query();
+        assertEquals(bookTableView.getItems().size(), 1);
+    }
+
+
+
+       @Order(11)
         @Test
     public void testDeleteBookButton() {
 

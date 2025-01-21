@@ -27,7 +27,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-
+import javafx.scene.control.ListCell;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.sql.Connection;
@@ -56,10 +56,6 @@ public class BookView implements DatabaseConnector {
         this.user = user;
     }
 
-    public TableView<Book> getTableView() {
-        return tableView;
-    }
-
 
 
     public Scene showView(Stage stage) {
@@ -69,6 +65,7 @@ public class BookView implements DatabaseConnector {
         search_label.setMinHeight(40);
 
         search_field = new TextField();
+        search_field.setId("search_field");
         search_field.setPromptText("Enter a book title...");
         search_field.setMinWidth(600);
         search_field.setMinHeight(40);
@@ -77,6 +74,7 @@ public class BookView implements DatabaseConnector {
         tableView = new TableView<>();
         tableView.setId("tableView");
         TableView<Book> buying_tableView = new TableView<>();
+        buying_tableView.setId("buying_tableView");
         tableView.setRowFactory(tv -> {
             TableRow<Book> row = new TableRow<>();
             row.itemProperty().addListener((obs, previousBook, currentBook) -> {
@@ -328,20 +326,28 @@ public class BookView implements DatabaseConnector {
         buyQuantityCol.setCellValueFactory(cellData -> {
             Book book = cellData.getValue();
             ChoiceBox<Integer> choiceBox = new ChoiceBox<>();
+
             for (int i = 0; i <= book.getQuantity(); i++) {
                 choiceBox.getItems().add(i);
             }
+
             choiceBox.setId("quantity-choice-" + book.getISBN());
-            System.out.println(choiceBox.getId());
             choiceBox.setValue(book.getChosenQuantity());
+
             choiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
                 book.setChosenQuantity(newVal);
                 updateTotalSumLabel();
             });
 
+            for (int i = 0; i <= book.getQuantity(); i++) {
+                String itemId = "quantity-being-bought-" + i;
+                System.out.println("Item ID: " + itemId);
+            }
+
             return new SimpleObjectProperty<>(choiceBox);
         });
         buyQuantityCol.setMinWidth(115);
+
 
 
 
@@ -372,8 +378,10 @@ public class BookView implements DatabaseConnector {
         tables.getChildren().addAll(tableView , buying_tableView);
 
         ComboBox<String> filterComboBox = FilterController.createFilterComboBox(bookList.getCategories());
+        filterComboBox.setId("filter-combo-box");
 
         Button search_button = new Button("Search");
+        search_button.setId("search-button");
         search_button.setMinWidth(30);
         search_button.setMinHeight(30);
         search_button.setOnAction(event -> {
@@ -424,6 +432,7 @@ public class BookView implements DatabaseConnector {
         totalSumLabel.setStyle("-fx-font-size: 20px;");
 
         Button clearAllButton = new Button("Clear");
+        clearAllButton.setId("clearButton");
         clearAllButton.setMinWidth(50);
         clearAllButton.setMinHeight(50);
         clearAllButton.setOnAction(event -> {
@@ -542,5 +551,6 @@ public class BookView implements DatabaseConnector {
         double totalSum = calculateTotalSum();
         totalSumLabel.setText("Total Sum: " + String.format("%.2f", totalSum));
     }
+
 
 }
