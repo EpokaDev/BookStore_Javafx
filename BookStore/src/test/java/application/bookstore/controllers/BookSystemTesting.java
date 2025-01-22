@@ -58,7 +58,7 @@ public class BookSystemTesting extends ApplicationTest {
         clickOn(".alert .button");
 
         // Navigate to Add Book view by clicking the appropriate button in AdminView
-        clickOn("#bookstoreButton"); // Assuming the button ID is "bookstoreButton" for navigation
+        clickOn("#bookstoreButton");
 
         // Verify the Add Book screen is visible
         verifyThat("Add Book", isVisible());
@@ -117,7 +117,7 @@ public class BookSystemTesting extends ApplicationTest {
         clickOn(".alert .button");
 
         // Navigate to Add Book view by clicking the appropriate button in AdminView
-        clickOn("#bookstoreButton"); // Assuming the button ID is "bookstoreButton" for navigation
+        clickOn("#bookstoreButton");
 
         // Verify the Add Book screen is visible
         verifyThat("Add Book", isVisible());
@@ -170,7 +170,7 @@ public class BookSystemTesting extends ApplicationTest {
         clickOn(".alert .button");
 
         // Navigate to Add Book view by clicking the appropriate button in AdminView
-        clickOn("#bookstoreButton"); // Assuming the button ID is "bookstoreButton" for navigation
+        clickOn("#bookstoreButton");
 
         // Verify the Add Book screen is visible
         verifyThat("Add Book", isVisible());
@@ -224,7 +224,7 @@ public class BookSystemTesting extends ApplicationTest {
         clickOn(".alert .button");
 
         // Navigate to Add Book view by clicking the appropriate button in AdminView
-        clickOn("#bookstoreButton"); // Assuming the button ID is "bookstoreButton" for navigation
+        clickOn("#bookstoreButton");
 
         // Verify the Add Book screen is visible
         verifyThat("Add Book", isVisible());
@@ -279,7 +279,7 @@ public class BookSystemTesting extends ApplicationTest {
         clickOn(".alert .button");
 
         // Navigate to Add Book view by clicking the appropriate button in AdminView
-        clickOn("#bookstoreButton"); // Assuming the button ID is "bookstoreButton" for navigation;
+        clickOn("#bookstoreButton");
 
         tableView = lookup("#tableView").query();
 
@@ -446,7 +446,7 @@ public class BookSystemTesting extends ApplicationTest {
         clickOn(".alert .button");
 
         // Navigate to Add Book view by clicking the appropriate button in AdminView
-        clickOn("#bookstoreButton"); // Assuming the button ID is "bookstoreButton" for navigation;
+        clickOn("#bookstoreButton");
 
         tableView = lookup("#tableView").query();
 

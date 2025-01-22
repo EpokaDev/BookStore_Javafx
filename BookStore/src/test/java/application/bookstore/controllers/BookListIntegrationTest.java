@@ -50,11 +50,8 @@ class BookListIntegrationTest {
                 BookList bookList = new BookList();
                 bookList.booksWithLowQuantity.add(lowStockBook);
 
-                // Act
                 bookList.notifyLowQuantity();
 
-                // Debugging log for verification
-                System.out.println("Alert triggered for low stock books.");
             });
 
             WaitForAsyncUtils.waitForFxEvents(); // Wait for JavaFX thread
