@@ -129,8 +129,6 @@ class BookViewIntegrationTest extends ApplicationTest {
 //            // Fetch filtered books
 //            ObservableList<Book> filteredBooks = bookView.getTableView().getItems();
 //
-//            // Debugging: Log filtered books
-//            System.out.println("Filtered Books:");
 //            filteredBooks.forEach(book -> System.out.println(book.getTitle()));
 //
 //            // Verify filtered results

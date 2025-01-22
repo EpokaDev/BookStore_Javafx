@@ -89,6 +89,9 @@ public class BookController implements DatabaseConnector {
 
 
     public static void generateBillToDatabase(ObservableList<Book> selectedBooks, double amount, User user) {
+        if (selectedBooks == null || selectedBooks.isEmpty()) {
+            throw new IllegalArgumentException("The selectedBooks list cannot be null or empty.");
+        }
         if(amount < 0){
             throw new IllegalArgumentException("Amount cannot be negative");
         }

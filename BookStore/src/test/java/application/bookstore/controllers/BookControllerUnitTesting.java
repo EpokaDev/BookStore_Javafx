@@ -13,6 +13,7 @@ import org.mockito.Mockito;
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
+import java.util.Objects;
 
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -55,11 +56,12 @@ class BookControllerUnitTesting {
             billsFolder.mkdirs();
         }
 
+        int fileSize = Objects.requireNonNull(billsFolder.listFiles((dir, name) -> name.startsWith("bill_") && name.endsWith(".txt"))).length;
+
         BookController.generateBill(user, books, 45.0);
 
-        File[] files = billsFolder.listFiles((dir, name) -> name.startsWith("bill_") && name.endsWith(".txt"));
-        assertNotNull(files);
-        assertTrue(files.length > 0);
+        int newFileSize = Objects.requireNonNull(billsFolder.listFiles((dir, name) -> name.startsWith("bill_") && name.endsWith(".txt"))).length;
+        assertEquals(fileSize + 1, newFileSize);
     }
 
     @Test
