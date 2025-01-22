@@ -1,6 +1,0 @@
-Sold by: Test User Role: Admin
-
-Books:
-- Test Book (Chosen Quantity: 2): $120.0Test Book - $120.0
-
-Total Amount: $240.0

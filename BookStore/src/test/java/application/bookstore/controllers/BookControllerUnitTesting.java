@@ -102,7 +102,7 @@ class BookControllerUnitTesting {
         user.setLastName("Doe");
         user.setUsername("johndoe");
 
-        ObservableList<Book> books = FXCollections.observableArrayList();
+        ObservableList<Book> books = FXCollections.observableArrayList(new Book("12345", "Book One", "Author One", "Fiction", "A great book", 10.0, 15.0, 5));
 
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
                 BookController.generateBillToDatabase(books, -10.0, user)

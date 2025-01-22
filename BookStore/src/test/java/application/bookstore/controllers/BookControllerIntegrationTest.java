@@ -17,6 +17,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -82,7 +83,7 @@ class BookControllerIntegrationTest {
         File[] billFiles = billsFolder.listFiles();
         assertNotNull(billFiles);
         assertTrue(billFiles.length > 0);
-
+        Arrays.sort(billFiles);
         File latestBill = billFiles[billFiles.length - 1];
         String billContent = Files.readString(latestBill.toPath());
         assertEquals(billContent,"Sold by: Test User Role: Admin\n" +
