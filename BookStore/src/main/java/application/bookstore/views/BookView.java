@@ -552,5 +552,9 @@ public class BookView implements DatabaseConnector {
         totalSumLabel.setText("Total Sum: " + String.format("%.2f", totalSum));
     }
 
+    public TableView<Book> getTableView(){
+        return tableView;
+    }
+
 
 }

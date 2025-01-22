@@ -43,7 +43,6 @@ class BookListIntegrationTest {
     @Test
         void testLowQuantityNotification_TriggerAlert() {
             Platform.runLater(() -> {
-                // Initialize low stock book
                 Book lowStockBook = new Book("1234567890", "Low Stock Book", "Author", "Category", 1,
                         "Description", null, 10.0, 15.0, 2);
 
