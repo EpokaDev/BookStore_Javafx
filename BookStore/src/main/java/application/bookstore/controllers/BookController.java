@@ -18,7 +18,7 @@ public class BookController implements DatabaseConnector {
     public static void generateBill(User user, ObservableList<Book> selectedBooks, double amount) {
         File billsFolder = new File("bills");
         if (!billsFolder.exists()) {
-                throw new RuntimeException();
+            billsFolder.mkdir();
         }
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
@@ -34,6 +34,7 @@ public class BookController implements DatabaseConnector {
                 writer.write(bookInfo);
             }
             writer.write("\nTotal Amount: $" + amount);
+
             updateQuantity(selectedBooks);
 
             System.out.println("Bill generated successfully. Filename: " + fileName);
@@ -58,8 +59,24 @@ public class BookController implements DatabaseConnector {
         }
     }
 
-    public static void deleteBook(String isbn) {
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
+    public static void updateQuantity(ObservableList<Book> selectedBooks, Connection connection) {
+        for (Book book : selectedBooks) {
+            String updateSQL = "UPDATE book SET quantity = ? WHERE ISBN = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(updateSQL)) {
+                int newQuantity = book.getQuantity() - book.getChosenQuantity();
+                preparedStatement.setInt(1, newQuantity);
+                preparedStatement.setString(2, book.getISBN());
+                preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+
+
+    public static void deleteBook(String isbn, Connection connection) {
+        try {
             String deleteSql = "DELETE FROM Book WHERE ISBN = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(deleteSql)) {
                 preparedStatement.setString(1, isbn);
@@ -70,7 +87,11 @@ public class BookController implements DatabaseConnector {
         }
     }
 
+
     public static void generateBillToDatabase(ObservableList<Book> selectedBooks, double amount, User user) {
+        if (selectedBooks == null || selectedBooks.isEmpty()) {
+            throw new IllegalArgumentException("The selectedBooks list cannot be null or empty.");
+        }
         if(amount < 0){
             throw new IllegalArgumentException("Amount cannot be negative");
         }

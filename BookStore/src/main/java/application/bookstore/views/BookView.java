@@ -27,9 +27,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-
+import javafx.scene.control.ListCell;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.function.Predicate;
 
@@ -48,80 +51,12 @@ public class BookView implements DatabaseConnector {
     private EditBookView editBookView;
     private AddBookView addBookView;
 
-    public BookView(StringProperty role, User user, EditBookView editBookView) {
-        this.role = role;
-        this.user = user;
-        this.editBookView = editBookView;
-    }
-
-    public BookView(StringProperty role, User user, AddBookView addBookView) {
-        this.role = role;
-        this.user = user;
-        this.addBookView = addBookView;
-    }
-
-
     public BookView(StringProperty role ,User user) {
         this.role = role;
         this.user = user;
     }
 
-    public TableView<Book> getTableView() {
-        return tableView;
-    }
 
-    public ObservableList<Book> getSelectedBooks() {
-        return selectedBooks;
-    }
-
-    public void generateBill(BookController bookController) {
-        if (selectedBooks.isEmpty()) {
-            // Display error if no books are selected
-            Alerts.showAlert(Alert.AlertType.ERROR, "No Books Selected!", "Please select at least one book to generate a bill.");
-            return;
-        }
-
-        try {
-            // Calculate total amount
-            double totalAmount = calculateTotalSum();
-
-            // Generate the bill and save it to the database
-            bookController.generateBillToDatabase(selectedBooks, totalAmount, user);
-
-            // Display success message
-            Alerts.showAlert(Alert.AlertType.INFORMATION, "Success", "Bill generated successfully!");
-
-            // Clear selected books and refresh UI
-            selectedBooks.clear();
-            tableView.refresh();
-            totalSumLabel.setText("Total Sum: $0.00");
-        } catch (Exception e) {
-            // Handle any errors during bill generation
-            Alerts.showAlert(Alert.AlertType.ERROR, "Error", "Failed to generate bill: " + e.getMessage());
-        }
-    }
-
-    public void addBookButtonClicked() {
-        if (addBookView == null) {
-            addBookView = new AddBookView();
-        }
-        Stage popup = new Stage();
-        try {
-            popup.setScene(addBookView.showView(popup));
-            popup.show();
-        } catch (Exception e) {
-            Alerts.showAlert(Alert.AlertType.ERROR, "Error", "Failed to open Add Book View: " + e.getMessage());
-        }
-    }
-
-    public void editBook(Book book) {
-        if (editBookView == null) {
-            editBookView = new EditBookView(book); // Fallback for production
-        }
-        Stage popup = new Stage();
-        popup.setScene(editBookView.showView(popup));
-        popup.show();
-    }
 
     public Scene showView(Stage stage) {
         pane = new BorderPane();
@@ -130,15 +65,26 @@ public class BookView implements DatabaseConnector {
         search_label.setMinHeight(40);
 
         search_field = new TextField();
+        search_field.setId("search_field");
         search_field.setPromptText("Enter a book title...");
         search_field.setMinWidth(600);
         search_field.setMinHeight(40);
 
 
         tableView = new TableView<>();
+        tableView.setId("tableView");
         TableView<Book> buying_tableView = new TableView<>();
+        buying_tableView.setId("buying_tableView");
         tableView.setRowFactory(tv -> {
             TableRow<Book> row = new TableRow<>();
+            row.itemProperty().addListener((obs, previousBook, currentBook) -> {
+                if (currentBook != null) {
+                    row.setId(String.valueOf(currentBook.getISBN()));
+                    System.out.println("Row ID set: " + row.getId());
+                } else {
+                    row.setId(null);
+                }
+            });
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && !row.isEmpty()) {
                     Book selectedBook = row.getItem();
@@ -160,8 +106,12 @@ public class BookView implements DatabaseConnector {
                             Stage editStage = new Stage();
                             editStage.setScene(editBookView.showView(editStage));
                             editStage.show();
+
+                            Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
+
                             bookList = new BookList();
-                            books = bookList.getBooks();
+                            books = bookList.getBooks(connection);
+                            tableView.getItems().clear();
                             tableView.getItems().addAll(books);
                             tableView.refresh();
                         } catch (Exception ex) {
@@ -169,13 +119,20 @@ public class BookView implements DatabaseConnector {
                         }
                         actionStage.close();
                     });
+                    editButton.setId("editButton");
+
 
                     deleteButton.setOnAction(e -> {
-                        BookController.deleteBook(selectedBook.getISBN());
+                        try {
+                            Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
+                            BookController.deleteBook(selectedBook.getISBN(),connection);
                         tableView.getItems().remove(selectedBook);
                         tableView.refresh();
                         actionStage.close();
-                    });
+                    } catch (SQLException ex) {
+                            throw new RuntimeException(ex);
+                        }});
+                    deleteButton.setId("deleteButton");
 
                     actionBox.setAlignment(Pos.CENTER);
                     actionBox.setSpacing(10);
@@ -306,6 +263,7 @@ public class BookView implements DatabaseConnector {
             public ObservableValue<CheckBox> call(TableColumn.CellDataFeatures<Book, CheckBox> chosenBook) {
                 Book chosen_book = chosenBook.getValue();
                 CheckBox checkBox = new CheckBox();
+                checkBox.setId("checkbox-" + chosen_book.getISBN());
                 checkBox.selectedProperty().setValue(false);
                 checkBox.selectedProperty().addListener((ov, old_val, new_val) -> {
                     if (new_val) {
@@ -368,18 +326,28 @@ public class BookView implements DatabaseConnector {
         buyQuantityCol.setCellValueFactory(cellData -> {
             Book book = cellData.getValue();
             ChoiceBox<Integer> choiceBox = new ChoiceBox<>();
+
             for (int i = 0; i <= book.getQuantity(); i++) {
                 choiceBox.getItems().add(i);
             }
+
+            choiceBox.setId("quantity-choice-" + book.getISBN());
             choiceBox.setValue(book.getChosenQuantity());
+
             choiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
                 book.setChosenQuantity(newVal);
                 updateTotalSumLabel();
             });
 
+            for (int i = 0; i <= book.getQuantity(); i++) {
+                String itemId = "quantity-being-bought-" + i;
+                System.out.println("Item ID: " + itemId);
+            }
+
             return new SimpleObjectProperty<>(choiceBox);
         });
         buyQuantityCol.setMinWidth(115);
+
 
 
 
@@ -392,19 +360,28 @@ public class BookView implements DatabaseConnector {
         tableView.getColumns().addAll(selectCol , isbnCol , titleCol , authorCol ,
                 categoryCol , descriptionCol , imageCol  , quantityCol);
 
-        bookList = new BookList();
-        books = bookList.getBooks();
-        if(!(user.getRoleString().equalsIgnoreCase("librarian")) && !(books.isEmpty())){
-            BookList.notifyLowQuantity();
+        try {
+            Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
+            bookList = new BookList();
+            books = bookList.getBooks(connection); // Pass the connection to getBooks
+            if (!(user.getRoleString().equalsIgnoreCase("librarian")) && !(books.isEmpty())) {
+                BookList.notifyLowQuantity();
+            }
+            tableView.getItems().clear(); // Clear existing items to avoid duplicates
+            tableView.getItems().addAll(books);
+        } catch (SQLException ex) {
+            throw new RuntimeException("Failed to load books from the database", ex);
         }
-        tableView.getItems().addAll(books);
+
 
         VBox tables = new VBox();
         tables.getChildren().addAll(tableView , buying_tableView);
 
         ComboBox<String> filterComboBox = FilterController.createFilterComboBox(bookList.getCategories());
+        filterComboBox.setId("filter-combo-box");
 
         Button search_button = new Button("Search");
+        search_button.setId("search-button");
         search_button.setMinWidth(30);
         search_button.setMinHeight(30);
         search_button.setOnAction(event -> {
@@ -428,14 +405,15 @@ public class BookView implements DatabaseConnector {
         HBox hbox_bottom = new HBox();
 
         Button generateBill = new Button("Generate Bill");
+        generateBill.setId("generateBill");
         generateBill.setMinWidth(50);
         generateBill.setMinHeight(50);
         generateBill.setOnAction( e->{
             if(selectedBooks.isEmpty()){
                 Alerts.showAlert(Alert.AlertType.ERROR , "No Books Selected!" , "Please Select Book!");
             }else {
-                BookController.generateBillToDatabase(selectedBooks , calculateTotalSum() , user);
                 BookController.generateBill(user, selectedBooks, calculateTotalSum());
+                BookController.generateBillToDatabase(selectedBooks , calculateTotalSum() , user);
                 for (Book selectedBook : selectedBooks) {
                     int newQuantity = selectedBook.getQuantity() - selectedBook.getChosenQuantity();
                     selectedBook.setQuantity(newQuantity);
@@ -454,6 +432,7 @@ public class BookView implements DatabaseConnector {
         totalSumLabel.setStyle("-fx-font-size: 20px;");
 
         Button clearAllButton = new Button("Clear");
+        clearAllButton.setId("clearButton");
         clearAllButton.setMinWidth(50);
         clearAllButton.setMinHeight(50);
         clearAllButton.setOnAction(event -> {
@@ -464,6 +443,7 @@ public class BookView implements DatabaseConnector {
         });
 
         Button goBackButton = new Button("Go Back");
+        goBackButton.setId("goBack");
         goBackButton.setMinWidth(50);
         goBackButton.setMinHeight(50);
         goBackButton.setOnAction(event -> {
@@ -477,6 +457,7 @@ public class BookView implements DatabaseConnector {
 
         if(!(user.getRoleString().equalsIgnoreCase("librarian"))){
             Button addBook = getButton();
+            addBook.setId("addBookButton");
             if(user.getRoleString().equalsIgnoreCase("admin")) {
                 hbox_bottom.getChildren().addAll(totalSumLabel, generateBill, clearAllButton, addBook , goBackButton);
             }else{
@@ -507,6 +488,7 @@ public class BookView implements DatabaseConnector {
 
     private static Button getButton() {
         Button addBook = new Button("Add Book");
+        addBook.setId("addBookButton");
         addBook.setOnAction(event -> {
             Stage popup = new Stage();
             AddBookView addBookView = new AddBookView();
@@ -556,7 +538,7 @@ public class BookView implements DatabaseConnector {
         imageCol.setMinWidth(160);
         return imageCol;
     }
-    private double calculateTotalSum() {
+    public double calculateTotalSum() {
         double totalSum = 0.0;
         for (Book book : selectedBooks) {
             double originalPrice = book.getSellingPrice();
@@ -569,5 +551,10 @@ public class BookView implements DatabaseConnector {
         double totalSum = calculateTotalSum();
         totalSumLabel.setText("Total Sum: " + String.format("%.2f", totalSum));
     }
+
+    public TableView<Book> getTableView(){
+        return tableView;
+    }
+
 
 }

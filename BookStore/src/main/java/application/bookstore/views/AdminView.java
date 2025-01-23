@@ -91,6 +91,7 @@ public class AdminView extends AbstractAdminView{
 		other_users_buttons.setBackground(null);
 
         Button bookstore_button = new Button("", buttonImages[2]);
+		bookstore_button.setId("bookstoreButton");
 		bookstore_button.setPrefHeight(120);
 		bookstore_button.setPrefWidth(150);
 		bookstore_button.setBackground(null);

@@ -50,6 +50,7 @@ public class EditBookView {
         addBook.setMinHeight(50);
         addBook.setMinWidth(150);
         addBook.setOnAction(e -> {editBook(); stage.close();});
+        addBook.setId("confirmEditButton");
         Button cancelButton = new Button("Cancel");
         cancelButton.setMinHeight(50);
         cancelButton.setMinWidth(150);
@@ -113,17 +114,28 @@ public class EditBookView {
         TextField isbnTextField = new TextField(book.getISBN());
         isbnTextField.setEditable(false);
         titleTextField = new TextField();
+        titleTextField.setId("titleTextField");
         authorTextField = new TextField();
+        authorTextField.setId("authorTextField");
         categoryTextField = new TextField();
+        categoryTextField.setId("categoryTextField");
         descriptionTextField = new TextField();
+        descriptionTextField.setId("descriptionTextField");
         originalPriceTextField = new TextField();
+        originalPriceTextField.setId("originalPriceTextField");
         sellingPriceTextField = new TextField();
+        sellingPriceTextField.setId("sellingPriceTextField");
         quantityTextField = new TextField();
+        quantityTextField.setId("quantityTextField");
 
         supplierNameTextField = new TextField();
+        supplierNameTextField.setId("supplierNameTextField");
         supplierEmailTextField = new TextField();
+        supplierEmailTextField.setId("supplierEmailTextField");
         TextField supplierPhoneTextField = new TextField();
+        supplierPhoneTextField.setId("supplierPhoneTextField");
         supplierAddressTextField = new TextField();
+        supplierAddressTextField.setId("supplierAddressTextField");
 
         imageView = new ImageView();
         imageView.setFitWidth(150);
@@ -167,21 +179,54 @@ public class EditBookView {
     }
     public void editBook() {
         try {
-            book.setTitle(titleTextField.getText());
-            book.setAuthor(authorTextField.getText());
-            book.setCategory(categoryTextField.getText());
-            book.setDescription(descriptionTextField.getText());
-            book.setOriginalPrice(Double.parseDouble(originalPriceTextField.getText()));
-            book.setSellingPrice(Double.parseDouble(sellingPriceTextField.getText()));
-            book.setQuantity(Integer.parseInt(quantityTextField.getText()));
-            Supplier supplier = new Supplier(supplierNameTextField.getText() , supplierEmailTextField.getText() ,
-                    supplierPhoneLabel.getText() , supplierAddressTextField.getText());
-            supplier.findSupplierId();
-            book.setSupplier(supplier);
-            book.saveImageLocally(selectedImageFile);
+            if (!titleTextField.getText().isEmpty()) {
+                book.setTitle(titleTextField.getText());
+            }
+
+            if (!authorTextField.getText().isEmpty()) {
+                book.setAuthor(authorTextField.getText());
+            }
+
+            if (!categoryTextField.getText().isEmpty()) {
+                book.setCategory(categoryTextField.getText());
+            }
+
+            if (!descriptionTextField.getText().isEmpty()) {
+                book.setDescription(descriptionTextField.getText());
+            }
+
+            if (!originalPriceTextField.getText().isEmpty()) {
+                book.setOriginalPrice(Double.parseDouble(originalPriceTextField.getText()));
+            }
+
+            if (!sellingPriceTextField.getText().isEmpty()) {
+                book.setSellingPrice(Double.parseDouble(sellingPriceTextField.getText()));
+            }
+
+            if (!quantityTextField.getText().isEmpty()) {
+                book.setQuantity(Integer.parseInt(quantityTextField.getText()));
+            }
+
+            if (!supplierNameTextField.getText().isEmpty() ||
+                    !supplierEmailTextField.getText().isEmpty() ||
+                    !supplierAddressTextField.getText().isEmpty()) {
+                Supplier supplier = new Supplier(
+                        supplierNameTextField.getText().isEmpty() ? book.getSupplier().getName() : supplierNameTextField.getText(),
+                        supplierEmailTextField.getText().isEmpty() ? book.getSupplier().getEmail() : supplierEmailTextField.getText(),
+                        supplierPhoneLabel.getText().isEmpty() ? book.getSupplier().getPhoneNumber() : supplierPhoneLabel.getText(),
+                        supplierAddressTextField.getText().isEmpty() ? book.getSupplier().getAddress() : supplierAddressTextField.getText()
+                );
+                supplier.findSupplierId();
+                book.setSupplier(supplier);
+            }
+
+            if (selectedImageFile != null) {
+                book.saveImageLocally(selectedImageFile);
+            }
+
             book.updateInDatabase();
         } catch (NumberFormatException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Invalid number format: " + e.getMessage());
         }
     }
 }

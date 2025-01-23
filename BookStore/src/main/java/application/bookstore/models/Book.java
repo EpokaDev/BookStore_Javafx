@@ -299,24 +299,25 @@ public class Book  implements DatabaseConnector {
         preparedStatement.setDouble(8, originalPrice);
         preparedStatement.setDouble(9, sellingPrice);
         preparedStatement.setInt(10, quantity);
+        System.out.println(preparedStatement);
         preparedStatement.executeUpdate();
       }
     } catch (SQLException e) {
-      e.fillInStackTrace();
+      e.printStackTrace();
     }
   }
   public void updateInDatabase() {
     try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
-      String sql = "UPDATE Book SET name = ?, author = ?, category = ?,  " +
-              "description = ?, bookURL = ?, original_price = ?, selling_price = ?, quantity = ? " +
-              "WHERE ISBN = ?";
+      String sql = "UPDATE Book SET name = COALESCE(?, name), author = COALESCE(?, author), category = COALESCE(?, category), " +
+              "description = COALESCE(?, description), bookURL = COALESCE(?, bookURL), original_price = COALESCE(?, original_price), " +
+              "selling_price = COALESCE(?, selling_price), quantity = COALESCE(?, quantity) WHERE ISBN = ?";
 
       try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-        preparedStatement.setString(1, title);
-        preparedStatement.setString(2, author);
-        preparedStatement.setString(3, category);
-        preparedStatement.setString(4, description);
-        preparedStatement.setString(5, imageUrl);
+        preparedStatement.setString(1, title.isEmpty() ? null : title);
+        preparedStatement.setString(2, author.isEmpty() ? null : author);
+        preparedStatement.setString(3, category.isEmpty() ? null : category);
+        preparedStatement.setString(4, description.isEmpty() ? null : description);
+        preparedStatement.setString(5, imageUrl == null || imageUrl.isEmpty() ? null : imageUrl);
         preparedStatement.setDouble(6, originalPrice);
         preparedStatement.setDouble(7, sellingPrice);
         preparedStatement.setInt(8, quantity);
@@ -330,7 +331,7 @@ public class Book  implements DatabaseConnector {
         }
       }
     } catch (SQLException e) {
-      e.fillInStackTrace();
+      e.printStackTrace();
     }
   }
 }

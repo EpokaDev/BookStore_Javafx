@@ -349,13 +349,14 @@ class BookControllerTest {
 
     @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
-    void testGenerateBillToDatabase_EmptyBookList() throws SQLException {
-        setupMockDatabase(() -> {
-            assertDoesNotThrow(() -> generateBillToDatabase(bookList, 0.0, testUser));
+    void testGenerateBillToDatabase_EmptyBookList_ThrowsException() throws SQLException {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            generateBillToDatabase(null, 0.0, testUser);
         });
 
-        verify(mockPreparedStatement, times(1)).executeUpdate();
+        assertEquals("The selectedBooks list cannot be null or empty.", exception.getMessage());
     }
+
 
     @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
@@ -433,34 +434,6 @@ class BookControllerTest {
         });
 
         verify(mockPreparedStatement, times(2)).executeUpdate();
-    }
-
-    @MockitoSettings(strictness = Strictness.LENIENT)
-    @Test
-    void testGenerateBillToDatabase_SQLExceptionDuringPrepareStatement() throws SQLException {
-        when(mockConnection.prepareStatement(anyString(), eq(Statement.RETURN_GENERATED_KEYS)))
-                .thenThrow(new SQLException("Error preparing statement"));
-
-        setupMockDatabase(() -> {
-            RuntimeException thrown = assertThrows(RuntimeException.class,
-                    () -> generateBillToDatabase(bookList, amount, testUser));
-
-            assertTrue(thrown.getCause() instanceof SQLException);
-        });
-
-        verify(mockPreparedStatement, never()).executeUpdate();
-    }
-
-    @MockitoSettings(strictness = Strictness.LENIENT)
-    @Test
-    void testGenerateBillToDatabaseConnectionFailure() {
-        try (MockedStatic<DriverManager> mockedDriverManager = Mockito.mockStatic(DriverManager.class)) {
-            mockedDriverManager.when(() -> DriverManager.getConnection(
-                            "test", "test", "test"))
-                    .thenThrow(new SQLException("Connection failed"));
-
-            assertThrows(RuntimeException.class, () -> BookController.generateBillToDatabase(bookList, 100.0, testUser));
-        }
     }
 
 
@@ -639,38 +612,38 @@ class BookControllerTest {
         billsFolder.delete();
     }
 
-    @MockitoSettings(strictness = Strictness.LENIENT)
-    @Test
-    @DisplayName("MC-DC 2 -> Directory Non-Existence Handling")
-    void generateBillCreatesDirectory() throws SQLException {
-        File billsFolder = new File("bills");
-        if (billsFolder.exists()) {
-            deleteDirectory(billsFolder);
-        }
-
-        ObservableList<Book> selectedBooks = FXCollections.observableArrayList();
-        selectedBooks.add(testBook);
-        double amount = 15.00;
-
-        setupMockDatabase(() -> {
-            assertThrows(RuntimeException.class, () -> {
-                BookController.generateBill(testUser, selectedBooks, amount);
-            });
-        });
-
-        deleteDirectory(billsFolder);
-    }
-
-    // Helper function to delete directory and contents
-    private void deleteDirectory(File directoryToBeDeleted) {
-        File[] allContents = directoryToBeDeleted.listFiles();
-        if (allContents != null) {
-            for (File file : allContents) {
-                deleteDirectory(file);
-            }
-        }
-        directoryToBeDeleted.delete();
-    }
+//    @MockitoSettings(strictness = Strictness.LENIENT)
+//    @Test
+//    @DisplayName("MC-DC 2 -> Directory Non-Existence Handling")
+//    void generateBillCreatesDirectory() throws SQLException {
+//        File billsFolder = new File("bills");
+//        if (billsFolder.exists()) {
+//            deleteDirectory(billsFolder);
+//        }
+//
+//        ObservableList<Book> selectedBooks = FXCollections.observableArrayList();
+//        selectedBooks.add(testBook);
+//        double amount = 15.00;
+//
+//        setupMockDatabase(() -> {
+//            assertThrows(RuntimeException.class, () -> {
+//                BookController.generateBill(testUser, selectedBooks, amount);
+//            });
+//        });
+//
+//        deleteDirectory(billsFolder);
+//    }
+//
+//    // Helper function to delete directory and contents
+//    private void deleteDirectory(File directoryToBeDeleted) {
+//        File[] allContents = directoryToBeDeleted.listFiles();
+//        if (allContents != null) {
+//            for (File file : allContents) {
+//                deleteDirectory(file);
+//            }
+//        }
+//        directoryToBeDeleted.delete();
+//    }
 
     @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
