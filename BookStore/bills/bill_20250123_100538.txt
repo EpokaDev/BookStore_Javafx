@@ -1,6 +1,0 @@
-Sold by: John Doe Role: admin
-
-Books:
-- Effective Java (Chosen Quantity: 2): $45.0Effective Java - $45.0
-
-Total Amount: $90.0
