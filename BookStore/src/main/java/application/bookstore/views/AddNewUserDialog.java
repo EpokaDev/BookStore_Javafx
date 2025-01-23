@@ -48,6 +48,8 @@ public class AddNewUserDialog extends Dialog<User> implements DatabaseConnector 
         getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
         Button button = (Button) getDialogPane().lookupButton(ButtonType.OK);
+        button.setId("okButton"); // Set fx:id for OK button
+
         button.addEventFilter(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -63,7 +65,7 @@ public class AddNewUserDialog extends Dialog<User> implements DatabaseConnector 
                         (genderToggleGroup.getSelectedToggle() == null) ||
                         (roleToggleGroup.getSelectedToggle() == null)) {
 
-                    Alerts.showAlert(Alert.AlertType.ERROR,"Empty feilds","All fields must be completed");
+                    Alerts.showAlert(Alert.AlertType.ERROR,"Empty fields","All fields must be completed");
                     return false;
                 }
                 else if(!(firstNameField.getText().matches("[a-zA-Z ]{1,24}")&&
@@ -87,7 +89,7 @@ public class AddNewUserDialog extends Dialog<User> implements DatabaseConnector 
 
                 try
                 {
-                    AddNewUserController.allValuesUnique(getUsername(),getEmail(),getPassword());
+                    AddNewUserController.allValuesUnique(getUsername(),getEmail());
                 }catch (UsernameAlreadyExistsException e)
                 {
                     Alerts.showAlert(Alert.AlertType.ERROR,"Username exists","The entered username already exists");
@@ -95,10 +97,6 @@ public class AddNewUserDialog extends Dialog<User> implements DatabaseConnector 
                 }catch (EmailAlreadyExistsException ex)
                 {
                     Alerts.showAlert(Alert.AlertType.ERROR,"Email exists","The entered email already exists");
-                    return false;
-                }catch (PasswordAlreadyExistsException exe)
-                {
-                    Alerts.showAlert(Alert.AlertType.ERROR,"Password exists","The entered password already exists");
                     return false;
                 }
 
@@ -154,6 +152,7 @@ public class AddNewUserDialog extends Dialog<User> implements DatabaseConnector 
 
         Label firstNameL = new Label("First Name");
         firstNameField = new TextField();
+        firstNameField.setId("firstNameField"); // Set fx:id
         firstNameL.setFont(Font.font(25));
         firstNameField.setFont(Font.font(25));
         gridPane.add(firstNameL, 0, 0);
@@ -161,6 +160,7 @@ public class AddNewUserDialog extends Dialog<User> implements DatabaseConnector 
 
         Label lastNameL = new Label("Last Name");
         LastNameField = new TextField();
+        LastNameField.setId("lastNameField"); // Set fx:id
         lastNameL.setFont(Font.font(25));
         LastNameField.setFont(Font.font(25));
         gridPane.add(lastNameL, 0, 1);
@@ -168,6 +168,7 @@ public class AddNewUserDialog extends Dialog<User> implements DatabaseConnector 
 
         Label emailL = new Label("Email");
         EmailField = new TextField();
+        EmailField.setId("emailField"); // Set fx:id
         emailL.setFont(Font.font(25));
         EmailField.setFont(Font.font(25));
         gridPane.add(emailL, 0, 2);
@@ -175,6 +176,7 @@ public class AddNewUserDialog extends Dialog<User> implements DatabaseConnector 
 
         Label username = new Label("Username");
         UsernameField=new TextField();
+        UsernameField.setId("usernameField"); // Set fx:id
         username.setFont(Font.font(25));
         UsernameField.setFont(Font.font(25));
         gridPane.add(username,0,3);
@@ -182,6 +184,7 @@ public class AddNewUserDialog extends Dialog<User> implements DatabaseConnector 
 
         Label passwordL = new Label("Password");
         passF = new PasswordField();
+        passF.setId("passwordField"); // Set fx:id
         passwordL.setFont(Font.font(25));
         passF.setFont(Font.font(25));
         gridPane.add(passwordL, 0, 4);
@@ -189,6 +192,7 @@ public class AddNewUserDialog extends Dialog<User> implements DatabaseConnector 
 
         Label VPasswordL = new Label("Verify Password");
         VpassF = new PasswordField();
+        VpassF.setId("verifyPasswordField"); // Set fx:id
         VPasswordL.setFont(Font.font(25));
         VpassF.setFont(Font.font(25));
         gridPane.add(VPasswordL, 0, 5);
@@ -197,8 +201,12 @@ public class AddNewUserDialog extends Dialog<User> implements DatabaseConnector 
         genderToggleGroup = new ToggleGroup();
         Label genderL = new Label("Gender");
         male = new RadioButton("Male");
+        male.setId("maleRadio"); // Unique fx:id
         female = new RadioButton("Female");
+        female.setId("genderField"); // Set fx:id
+        female.setId("femaleRadio"); // Unique fx:id
         RadioButton other = new RadioButton("Other");
+        other.setId("otherRadio"); // Unique fx:id
         genderL.setFont(Font.font(25));
         male.setFont(Font.font(22));
         female.setFont(Font.font(22));
@@ -216,8 +224,11 @@ public class AddNewUserDialog extends Dialog<User> implements DatabaseConnector 
         role.setFont(Font.font(25));
         roleToggleGroup= new ToggleGroup();
         admin = new RadioButton("Admin");
+        admin.setId("adminRadio"); // Set fx:id
         manager = new RadioButton("Manager");
+        manager.setId("managerRadio"); // Set fx:id
         RadioButton librarian = new RadioButton("Librarian");
+        librarian.setId("librarianRadio"); // Set fx:id
         admin.setFont(Font.font(22));
         manager.setFont(Font.font(22));
         librarian.setFont(Font.font(22));
@@ -245,5 +256,19 @@ public class AddNewUserDialog extends Dialog<User> implements DatabaseConnector 
     {
         return this.passF.getText();
     }
+
+    public void setUsernameField(String text) {
+        this.UsernameField.setText(text);
+    }
+
+    public void setEmailField(String text) {
+        this.EmailField.setText(text);
+    }
+
+    public void setPassField(String text) {
+        this.passF.setText(text);
+    }
+
+
 
 }

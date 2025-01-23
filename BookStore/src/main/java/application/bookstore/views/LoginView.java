@@ -30,6 +30,21 @@ public class LoginView implements DatabaseConnector {
     private TextField userTextField;
     private PasswordField passwordField;
 
+    private boolean not_testing=true;
+
+    public LoginView()
+    {
+        this.grid = new GridPane();
+        not_testing=true;
+    }
+
+    public LoginView(boolean testing)
+    {
+        this.grid = new GridPane();
+        not_testing = false;
+    }
+
+
     public Scene showView(Stage stage) {
         StackPane root = new StackPane();
 
@@ -105,7 +120,13 @@ public class LoginView implements DatabaseConnector {
 
         root.getChildren().add(grid);
 
-        new LoginController(this, stage);
+        if(not_testing)
+        {
+            System.out.println("Not testing");
+            new LoginController(this, stage);
+        }
+        else
+            System.out.println("Testing");
 
         root.setStyle(
                 "-fx-font-family: 'JetBrains Mono'; " +

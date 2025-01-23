@@ -1,4 +1,6 @@
 module application.bookstore {
+    exports application.bookstore.controllers;
+
     requires javafx.controls;
     requires javafx.fxml;
 

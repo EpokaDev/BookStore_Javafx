@@ -21,7 +21,11 @@ public class AdminView extends AbstractAdminView{
 	private Scene scene;
     private VBox center;
 
+	private Label adminDashboard;
+
     public AdminView(User user){
+		this.adminDashboard = new Label("Admin Dashboard");
+		adminDashboard.setId("adminDashboard"); // Unique ID for testing
 		this.user = user;
 	}
 	public Scene showView(Stage stage) {
@@ -34,7 +38,7 @@ public class AdminView extends AbstractAdminView{
 
 		if (osName.contains("win"))
 		{
-			backgroundImage = new Image("C:\\Users\\alvin\\OneDrive\\Desktop\\SW_testing\\Bookstore_javfx_testing\\BookStore_Javafx\\BookStore\\Images\\3d-render-wooden-table-looking-out-blurred-background-with-bookcase.jpg");
+			backgroundImage = new Image("file:\\C:\\Users\\alvin\\OneDrive\\Desktop\\SW_testing\\Bookstore_javfx_testing\\BookStore_Javafx\\BookStore\\Images\\3d-render-wooden-table-looking-out-blurred-background-with-bookcase.jpg");
 
 		}else
 		{

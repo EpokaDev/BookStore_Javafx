@@ -12,21 +12,18 @@ public class AddNewUserController implements DatabaseConnector {
 
     public AddNewUserController()
     {
-
     }
 
-    public static void allValuesUnique(String username,String email,String password) throws EmailAlreadyExistsException, UsernameAlreadyExistsException, PasswordAlreadyExistsException
+    public static void allValuesUnique(String username,String email) throws EmailAlreadyExistsException, UsernameAlreadyExistsException
     {
         if(doesValueExist("username",username))
             throw new UsernameAlreadyExistsException();
         else if(doesValueExist("email",email))
             throw new EmailAlreadyExistsException();
-        else if(doesValueExist("password",password))
-            throw new PasswordAlreadyExistsException();
 
     }
 
-    private  static boolean doesValueExist(String columnName,String value) {
+    public static boolean doesValueExist(String columnName, String value) {
         String query = "SELECT COUNT(*) FROM user WHERE "+columnName+"= ?";
         boolean valueExists = false;
 

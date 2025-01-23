@@ -22,7 +22,7 @@ public class BookList implements DatabaseConnector {
             while (resultSet.next()) {
                 Book book = new Book(resultSet.getString("ISBN"), resultSet.getString("name"),
                         resultSet.getString("author"), resultSet.getString("category"),
-                        resultSet.getInt("supplier"), resultSet.getString("description"),
+                        resultSet.getInt("supplierId") ,resultSet.getString("description"),
                         new Image(resultSet.getString("bookURL")), resultSet.getDouble("original_price"),
                         resultSet.getDouble("selling_price"), resultSet.getInt("quantity"));
                 books.add(book);
