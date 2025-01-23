@@ -1,0 +1,7 @@
+Sold by: John Doe Role: Manager
+
+Books:
+- Book One (Chosen Quantity: 0): $15.0Book One - $15.0
+- Book Two (Chosen Quantity: 0): $18.0Book Two - $18.0
+
+Total Amount: $45.0

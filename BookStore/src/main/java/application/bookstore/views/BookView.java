@@ -38,8 +38,8 @@ import java.util.function.Predicate;
 
 
 public class BookView implements DatabaseConnector {
-    BorderPane pane;
-    private final ObservableList<Book> selectedBooks = FXCollections.observableArrayList();
+    public BorderPane pane;
+    public final ObservableList<Book> selectedBooks = FXCollections.observableArrayList();
     StringProperty role;
     private TextField search_field;
     private Label totalSumLabel;
@@ -80,7 +80,6 @@ public class BookView implements DatabaseConnector {
             row.itemProperty().addListener((obs, previousBook, currentBook) -> {
                 if (currentBook != null) {
                     row.setId(String.valueOf(currentBook.getISBN()));
-                    System.out.println("Row ID set: " + row.getId());
                 } else {
                     row.setId(null);
                 }
@@ -505,16 +504,26 @@ public class BookView implements DatabaseConnector {
     }
 
     public void filterTable(String selectedCategory, String searchText) {
+
+        ObservableList<Book> allBooks = FXCollections.observableArrayList(tableView.getItems());
+
+        allBooks.forEach(book -> System.out.println(book.getTitle()));
+
         Predicate<Book> predicate = book -> {
             boolean categoryMatch = "All".equals(selectedCategory) || book.getCategory().equalsIgnoreCase(selectedCategory);
             boolean titleMatch = searchText.isEmpty() || book.getTitle().toLowerCase().contains(searchText.toLowerCase());
             return categoryMatch && titleMatch;
         };
-        FilteredList<Book> filteredList = new FilteredList<>(FXCollections.observableArrayList(books));
+
+        FilteredList<Book> filteredList = new FilteredList<>(allBooks);
         filteredList.setPredicate(predicate);
+
+        filteredList.forEach(book -> System.out.println(book.getTitle()));
+
         tableView.setItems(filteredList);
         tableView.refresh();
     }
+
 
 
 

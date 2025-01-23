@@ -95,6 +95,7 @@ public class Supplier implements DatabaseConnector {
     }
 
     public int findSupplierId() {
+        System.out.println("testtttt");
         try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
             String selectSql = "SELECT * FROM Supplier WHERE email = ?";
             try (PreparedStatement selectStatement = connection.prepareStatement(selectSql)) {

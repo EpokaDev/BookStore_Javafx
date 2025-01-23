@@ -23,17 +23,18 @@ public class EditBookView {
 
     private Label supplierPhoneLabel;
 
-    private TextField titleTextField;
-    private TextField authorTextField;
+    public TextField titleTextField;
+    public TextField authorTextField;
     private TextField categoryTextField;
     private TextField descriptionTextField;
     private TextField originalPriceTextField;
-    private TextField sellingPriceTextField;
+    public TextField sellingPriceTextField;
     private TextField quantityTextField;
 
-    private TextField supplierNameTextField;
-    private TextField supplierEmailTextField;
+    public TextField supplierNameTextField;
+    public TextField supplierEmailTextField;
     private TextField supplierAddressTextField;
+    public TextField supplierPhoneTextField;
     private ImageView imageView;
     private File selectedImageFile;
     private final Book book;
@@ -132,7 +133,7 @@ public class EditBookView {
         supplierNameTextField.setId("supplierNameTextField");
         supplierEmailTextField = new TextField();
         supplierEmailTextField.setId("supplierEmailTextField");
-        TextField supplierPhoneTextField = new TextField();
+        supplierPhoneTextField = new TextField();
         supplierPhoneTextField.setId("supplierPhoneTextField");
         supplierAddressTextField = new TextField();
         supplierAddressTextField.setId("supplierAddressTextField");
@@ -206,7 +207,6 @@ public class EditBookView {
             if (!quantityTextField.getText().isEmpty()) {
                 book.setQuantity(Integer.parseInt(quantityTextField.getText()));
             }
-
             if (!supplierNameTextField.getText().isEmpty() ||
                     !supplierEmailTextField.getText().isEmpty() ||
                     !supplierAddressTextField.getText().isEmpty()) {
