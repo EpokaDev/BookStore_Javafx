@@ -1,6 +1,7 @@
 package application.bookstore.controllers;
 
 import application.bookstore.auxiliaries.DatabaseConnector;
+import application.bookstore.auxiliaries.DialogFactory;
 import application.bookstore.models.User;
 import application.bookstore.views.AddNewUserDialog;
 import application.bookstore.views.UsersTableView;
@@ -9,6 +10,8 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
+
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -29,6 +32,15 @@ public class UsersTableController implements DatabaseConnector {
     private final Button addButton;
     private final Button removeButton;
 
+    private DataSource dataSource;
+
+    private DialogFactory dialogFactory;
+
+    private boolean testing=false;
+
+    private Connection mockConnection;
+
+
     public UsersTableController(UsersTableView view, ObservableList<User> currentUsers) {
 
         this.tableView = view.getTableView();
@@ -45,6 +57,32 @@ public class UsersTableController implements DatabaseConnector {
         this.addButton = view.getAddButton();
         this.removeButton = view.getRemoveButton();
 
+        this.testing = false;
+
+        System.out.println("hello");
+        Listener(view);
+    }
+
+    public UsersTableController(UsersTableView view, ObservableList<User> users, DataSource dataSource,Connection mockConnection) {
+        this.tableView = view.getTableView();
+        this.users = users;
+        this.dataSource = dataSource;
+
+        this.firstNameColumn = view.getFirstNameColumn();
+        this.lastNameColumn = view.getLastNameColumn();
+        this.emailColumn = view.getEmailColumn();
+        this.userNameColumn = view.getUserNameColumn();
+        this.passwordColumn = view.getPasswordColumn();
+        this.genderColumn = view.getGenderColumn();
+        this.roleColumn = view.getRoleColumn();
+
+        this.addButton = view.getAddButton();
+        this.removeButton = view.getRemoveButton();
+
+        this.testing = true;
+        this.mockConnection = mockConnection;
+
+        System.out.println("hello");
         Listener(view);
     }
 
@@ -111,8 +149,10 @@ public class UsersTableController implements DatabaseConnector {
                             )
                     );
                     Optional<User> result = userDialog.showAndWait();
+                    System.out.println("Hello -> checking result");
                     if (result.isPresent()) {
                         User user = result.get();
+                        System.out.println("Adding to DB");
                         add(user);
                     }
                 } catch (Exception e) {
@@ -129,64 +169,142 @@ public class UsersTableController implements DatabaseConnector {
         });
     }
 
-    void updateRowInDatabase(User user, String columnName, String newValue,
-                             String conditionColumn, String conditionValue) {
+    public void updateRowInDatabase(User user, String columnName, String newValue,
+                                    String conditionColumn, String conditionValue) {
         String query = "UPDATE user SET " + columnName + " = ? WHERE " + conditionColumn + " = ?";
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        if(!testing)
+        {
+            try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
+                 PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-            preparedStatement.setString(1, newValue);
-            preparedStatement.setString(2, conditionValue);
-            preparedStatement.executeUpdate();
+                preparedStatement.setString(1, newValue);
+                preparedStatement.setString(2, conditionValue);
+                preparedStatement.executeUpdate();
 
-        } catch (SQLException ex) {
-            System.out.println("Did not sign in to DB");
-            ex.printStackTrace();
+            } catch (SQLException ex) {
+                System.out.println("Did not sign in to DB");
+                ex.printStackTrace();
+            }
+        }else
+        {
+            try (
+                 PreparedStatement preparedStatement = mockConnection.prepareStatement(query)) {
+
+                preparedStatement.setString(1, newValue);
+                preparedStatement.setString(2, conditionValue);
+                preparedStatement.executeUpdate();
+
+            } catch (SQLException ex) {
+                System.out.println("Did not sign in to DB");
+                ex.printStackTrace();
+            }
         }
+
     }
 
     public void add(User user) {
         // 1) Add to the ObservableList (which also updates the table)
         users.add(user);
 
-        // 2) Add to the database
-        String query = "INSERT INTO user (firstName, lastName, email, userName, password, gender, Role) VALUES (?,?,?,?,?,?,?);";
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        System.out.println("Adding user");
 
-            preparedStatement.setString(1, user.getFirstName());
-            preparedStatement.setString(2, user.getLastName());
-            preparedStatement.setString(3, user.getEmail());
-            preparedStatement.setString(4, user.getUsername());
-            preparedStatement.setString(5, user.getPassword());
-            preparedStatement.setString(6, user.getGender());
-            preparedStatement.setString(7, user.getRoleString());
+        if(!testing)
+        {
+            // 2) Add to the database
+            String query = "INSERT INTO user (firstName, lastName, email, userName, password, gender, Role) VALUES (?,?,?,?,?,?,?);";
+            try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
+                 PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-            preparedStatement.executeUpdate();
+                preparedStatement.setString(1, user.getFirstName());
+                preparedStatement.setString(2, user.getLastName());
+                preparedStatement.setString(3, user.getEmail());
+                preparedStatement.setString(4, user.getUsername());
+                preparedStatement.setString(5, user.getPassword());
+                preparedStatement.setString(6, user.getGender());
+                preparedStatement.setString(7, user.getRoleString());
 
-        } catch (SQLException ex) {
-            System.out.println("Problem when adding user");
-            ex.printStackTrace();
+                preparedStatement.executeUpdate();
+
+            } catch (SQLException ex) {
+                System.out.println("Problem when adding user");
+                ex.printStackTrace();
+            }
+        }else
+        {
+            String query = "INSERT INTO user (firstName, lastName, email, userName, password, gender, Role) VALUES (?,?,?,?,?,?,?);";
+            try (
+                 PreparedStatement preparedStatement = mockConnection.prepareStatement(query)) {
+
+                preparedStatement.setString(1, user.getFirstName());
+                preparedStatement.setString(2, user.getLastName());
+                preparedStatement.setString(3, user.getEmail());
+                preparedStatement.setString(4, user.getUsername());
+                preparedStatement.setString(5, user.getPassword());
+                preparedStatement.setString(6, user.getGender());
+                preparedStatement.setString(7, user.getRoleString());
+
+                preparedStatement.executeUpdate();
+
+            } catch (SQLException ex) {
+                System.out.println("Problem when adding user");
+                ex.printStackTrace();
+            }
         }
+
     }
+
+
 
     public void removeRow(int row) {
         if (row >= 0 && row < tableView.getItems().size()) {
             User userToRemove = tableView.getItems().get(row);
 
-            // 1) Remove from DB
-            String query = "DELETE FROM user WHERE userName = ?";
-            try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
-                 PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                preparedStatement.setString(1, userToRemove.getUsername());
-                preparedStatement.executeUpdate();
-            } catch (SQLException ex) {
-                System.out.println("Did not sign in to DB");
-                ex.printStackTrace();
+            if(!testing)
+            {
+                // 1) Remove from DB
+                String query = "DELETE FROM user WHERE userName = ?";
+                try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
+                     PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                    preparedStatement.setString(1, userToRemove.getUsername());
+                    preparedStatement.executeUpdate();
+                } catch (SQLException ex) {
+                    System.out.println("Did not sign in to DB");
+                    ex.printStackTrace();
+                }
+
+                // 2) Remove from the list/table
+                tableView.getItems().remove(row);
+            }else
+            {
+                // 1) Remove from DB
+                String query = "DELETE FROM user WHERE userName = ?";
+                try (
+                     PreparedStatement preparedStatement = mockConnection.prepareStatement(query)) {
+                    preparedStatement.setString(1, userToRemove.getUsername());
+                    preparedStatement.executeUpdate();
+                } catch (SQLException ex) {
+                    System.out.println("Did not sign in to DB");
+                    ex.printStackTrace();
+                }
+
+                // 2) Remove from the list/table
+                tableView.getItems().remove(row);
             }
 
-            // 2) Remove from the list/table
-            tableView.getItems().remove(row);
         }
+    }
+
+
+
+    public ObservableList<User> returnUsers()
+    {
+        return this.users;
+    }
+
+    public int returnUsersSize()
+    {
+        System.out.println(users.size());
+        System.out.println(users);
+        return this.users.size();
     }
 }
