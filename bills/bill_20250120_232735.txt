@@ -1,0 +1,6 @@
+Sold by: adminn admin Role: admin
+
+Books:
+- Valid Book Title (Chosen Quantity: 18): $25.0Valid Book Title - $25.0
+
+Total Amount: $450.0
