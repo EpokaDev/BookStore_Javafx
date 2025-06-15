@@ -12,7 +12,7 @@ Mockito has been used extensively to test the software.
 Below is a video that shows the automated testing of adding, updating, and deleting a user.  
 I have simply run the program — everything shown is done automatically.
 
-[![Watch the testing demo]([https://img.youtube.com/vi/YOUR_VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=YOUR_VIDEO_ID](https://youtu.be/pJx-E6M4cb0))
+[![Watch the testing demo](https://img.youtube.com/vi/pJx-E6M4cb0/0.jpg)](https://www.youtube.com/watch?v=pJx-E6M4cb0) 
 
 
 ## Screenshots
